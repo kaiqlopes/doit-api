@@ -13,6 +13,8 @@ public class Category {
     private Long id;
     private String name;
 
+    @ManyToMany(mappedBy = "categories")
+    private List<ToDo> tasks = new ArrayList<>();
 
     public Category(Long id, String name) {
         this.id = id;
@@ -38,7 +40,9 @@ public class Category {
         this.name = name;
     }
 
-
+    public List<ToDo> getTasks() {
+        return tasks;
+    }
 
     @Override
     public boolean equals(Object o) {

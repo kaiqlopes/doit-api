@@ -1,5 +1,6 @@
 package com.personalproject.doit.entities;
 
+import com.personalproject.doit.enums.ToDoStatus;
 import jakarta.persistence.*;
 
 
@@ -14,13 +15,24 @@ public class ToDo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime finishDate;
     private Integer priority;
 
+    @Enumerated(EnumType.STRING)
+    private ToDoStatus taskStatus;
+
     @ManyToMany(mappedBy = "tasks")
     private List<User> users = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "tb_task_categories",
+    joinColumns = @JoinColumn(name = "task_id"),
+    inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories = new HashSet<>();
 
 
     public ToDo(Long id, String title, String description, LocalDateTime startDate, LocalDateTime finishDate, Integer priority) {
@@ -85,6 +97,14 @@ public class ToDo {
 
     public List<User> getUsers() {
         return users;
+    }
+
+    public ToDoStatus getTaskStatus() {
+        return taskStatus;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
     }
 
     @Override
