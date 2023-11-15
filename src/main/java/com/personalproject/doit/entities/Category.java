@@ -14,7 +14,7 @@ public class Category {
     private String name;
 
     @ManyToMany(mappedBy = "categories")
-    private List<ToDo> tasks = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>();
 
     public Category(Long id, String name) {
         this.id = id;
@@ -40,7 +40,7 @@ public class Category {
         this.name = name;
     }
 
-    public List<ToDo> getTasks() {
+    public List<Task> getTasks() {
         return tasks;
     }
 

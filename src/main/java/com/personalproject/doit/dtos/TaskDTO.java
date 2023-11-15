@@ -1,50 +1,41 @@
-package com.personalproject.doit.entities;
+package com.personalproject.doit.dtos;
 
+import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.enums.ToDoStatus;
-import jakarta.persistence.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 import java.time.LocalDateTime;
-import java.util.*;
 
-@Entity
-@Table(name = "tb_task")
-public class ToDo {
+public class TaskDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-
-    @Column(columnDefinition = "TEXT")
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime finishDate;
     private Integer priority;
-
-    @Enumerated(EnumType.STRING)
     private ToDoStatus taskStatus;
 
-    @ManyToMany(mappedBy = "tasks")
-    private List<User> users = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(name = "tb_task_categories",
-    joinColumns = @JoinColumn(name = "task_id"),
-    inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category> categories = new HashSet<>();
-
-
-    public ToDo(Long id, String title, String description, LocalDateTime startDate, LocalDateTime finishDate, Integer priority) {
+    public TaskDTO(Long id, String title, String description, LocalDateTime startDate, LocalDateTime finishDate, Integer priority, ToDoStatus taskStatus) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.priority = priority;
+        this.taskStatus = taskStatus;
     }
 
-    public ToDo() {
+    public TaskDTO(Task task) {
+        id = task.getId();
+        title = task.getTitle();
+        description = task.getDescription();
+        startDate = task.getStartDate();
+        finishDate = task.getFinishDate();
+        priority = task.getPriority();
+        taskStatus = task.getTaskStatus();
     }
 
     public Long getId() {
@@ -95,30 +86,11 @@ public class ToDo {
         this.priority = priority;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
     public ToDoStatus getTaskStatus() {
         return taskStatus;
     }
 
-    public Set<Category> getCategories() {
-        return categories;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ToDo toDo = (ToDo) o;
-
-        return Objects.equals(id, toDo.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+    public void setTaskStatus(ToDoStatus taskStatus) {
+        this.taskStatus = taskStatus;
     }
 }
