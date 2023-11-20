@@ -99,6 +99,10 @@ public class Task {
         return users;
     }
 
+    public void setTaskStatus(ToDoStatus taskStatus) {
+        this.taskStatus = taskStatus;
+    }
+
     public ToDoStatus getTaskStatus() {
         return taskStatus;
     }

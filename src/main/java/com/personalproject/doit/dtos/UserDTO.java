@@ -1,7 +1,6 @@
 package com.personalproject.doit.dtos;
 
 import com.personalproject.doit.entities.User;
-import jakarta.persistence.Column;
 
 import java.time.LocalDate;
 

@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 public class UserService {
@@ -45,6 +44,8 @@ public class UserService {
         user = userRepository.save(user);
         return new UserMinDTO(user);
     }
+
+
 
     @Transactional
     public UserMinDTO update(Long id, UserDTO dto) {

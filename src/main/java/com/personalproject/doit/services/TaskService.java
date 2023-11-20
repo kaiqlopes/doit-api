@@ -1,7 +1,10 @@
 package com.personalproject.doit.services;
 
+import com.personalproject.doit.dtos.CategoryDTO;
+import com.personalproject.doit.dtos.TaskCategoryDTO;
 import com.personalproject.doit.dtos.TaskDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
+import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.entities.User;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
@@ -35,4 +38,27 @@ public class TaskService {
         return result.map(TaskDTO::new);
     }
 
+    @Transactional
+    public TaskCategoryDTO insert(TaskCategoryDTO dto) {
+        Task task = new Task();
+        copyDtoToEntity(dto, task);
+        task = taskRepository.save(task);
+        return new TaskCategoryDTO(task);
+    }
+
+    private void copyDtoToEntity(TaskCategoryDTO dto, Task task) {
+        task.setTitle(dto.getTitle());
+        task.setDescription(dto.getDescription());
+        task.setStartDate(dto.getStartDate());
+        task.setFinishDate(dto.getFinishDate());
+        task.setTaskStatus(dto.getTaskStatus());
+        task.setPriority(dto.getPriority());
+
+        for (CategoryDTO catDto : dto.getCategory()) {
+            Category cat = new Category();
+            cat.setId(catDto.getId());
+            cat.setName(catDto.getName());
+            task.getCategories().add(cat);
+        }
+    }
 }

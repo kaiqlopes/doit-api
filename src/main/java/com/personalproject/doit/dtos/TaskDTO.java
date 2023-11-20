@@ -2,9 +2,7 @@ package com.personalproject.doit.dtos;
 
 import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.enums.ToDoStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+
 
 import java.time.LocalDateTime;
 
