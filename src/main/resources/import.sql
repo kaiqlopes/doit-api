@@ -44,26 +44,29 @@ INSERT INTO tb_category (name) VALUES ('Animais domésticos');
 INSERT INTO tb_category (name) VALUES ('Cuidados pessoais');
 INSERT INTO tb_category (name) VALUES ('Projetos pessoais');
 
-INSERT INTO tb_task_category(task_id, category_id) VALUES (1, 2);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (2, 2);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (2, 6);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (3, 2);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (3, 3);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (4, 1);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (5, 2);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (5, 3);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (6, 5);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (7, 1);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (7, 5);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (8, 4);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (9, 2);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (9, 6);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (10, 2);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (10, 3);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (11, 2);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (11, 3);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (12, 5);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (13, 2);
-INSERT INTO tb_task_category(task_id, category_id) VALUES (13, 3);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (1, 2);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (2, 2);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (2, 6);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (3, 2);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (3, 3);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (4, 1);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (5, 2);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (5, 3);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (6, 5);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (7, 1);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (7, 5);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (8, 4);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (9, 2);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (9, 6);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (10, 2);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (10, 3);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (11, 2);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (11, 3);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (12, 5);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (13, 2);
+INSERT INTO tb_task_categories(task_id, category_id) VALUES (13, 3);
+
+
+
 
 

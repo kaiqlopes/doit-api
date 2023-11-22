@@ -2,9 +2,11 @@ package com.personalproject.doit.services;
 
 import com.personalproject.doit.dtos.UserDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
+import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.entities.User;
 import com.personalproject.doit.exceptions.DatabaseException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
+import com.personalproject.doit.repositories.TaskRepository;
 import com.personalproject.doit.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -13,6 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 
 @Service
 public class UserService {
@@ -20,8 +26,8 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository repository) {
-        userRepository = repository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -64,8 +70,9 @@ public class UserService {
         try {
             userRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Referential Integrity Violation");
+            throw new DatabaseException("Data integrity violation", e);
         }
+
     }
 
     private void copyDtoToEntity(UserDTO dto, User entity) {

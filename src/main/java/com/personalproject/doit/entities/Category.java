@@ -14,7 +14,7 @@ public class Category {
     private String name;
 
     @ManyToMany(mappedBy = "categories")
-    private List<Task> tasks = new ArrayList<>();
+    Set<Task> tasks = new HashSet<>();
 
     public Category(Long id, String name) {
         this.id = id;
@@ -38,10 +38,6 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
     }
 
     @Override

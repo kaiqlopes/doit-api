@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static jakarta.persistence.CascadeType.*;
+
 @Entity
 @Table(name = "tb_task")
 public class Task {
@@ -29,9 +31,9 @@ public class Task {
     private List<User> users = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name = "tb_task_category",
-    joinColumns = @JoinColumn(name = "task_id"),
-    inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @JoinTable(name = "tb_task_categories",
+        joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
     private Set<Category> categories = new HashSet<>();
 
 
@@ -99,6 +101,10 @@ public class Task {
         return users;
     }
 
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
     public void setTaskStatus(ToDoStatus taskStatus) {
         this.taskStatus = taskStatus;
     }
@@ -109,6 +115,10 @@ public class Task {
 
     public Set<Category> getCategories() {
         return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 
     @Override

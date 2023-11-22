@@ -31,8 +31,8 @@ public class TaskController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<TaskDTO> findById(@PathVariable Long id) {
-        TaskDTO dto = taskService.findById(id);
+    public ResponseEntity<TaskCategoryDTO> findById(@PathVariable Long id) {
+        TaskCategoryDTO dto = taskService.findById(id);
         return ResponseEntity.ok(dto);
     }
 
@@ -42,5 +42,17 @@ public class TaskController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<TaskDTO> update(@PathVariable Long id, @RequestBody TaskDTO dto) {
+        dto = taskService.update(id, dto);
+        return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        taskService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

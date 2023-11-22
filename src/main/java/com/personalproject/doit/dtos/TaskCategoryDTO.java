@@ -116,7 +116,7 @@ public class TaskCategoryDTO {
         this.taskStatus = taskStatus;
     }
 
-    public List<CategoryDTO> getCategory() {
+    public List<CategoryDTO> getCategories() {
         return categories;
     }
 }
