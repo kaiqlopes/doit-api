@@ -24,10 +24,12 @@ import java.util.Set;
 public class UserService {
 
     private UserRepository userRepository;
+    private TaskRepository taskRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, TaskRepository taskRepository) {
         this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
     }
 
     @Transactional(readOnly = true)
@@ -64,8 +66,11 @@ public class UserService {
     @Transactional
     public void deleteById(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User doesnt exists");
+            throw new ResourceNotFoundException("User doesn't exists");
         }
+
+        List<Long> ids = taskRepository.findAssociatedTasksWithOnlyOneUserId(id);
+        taskRepository.deleteAllById(ids);
 
         try {
             userRepository.deleteById(id);

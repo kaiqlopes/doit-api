@@ -30,9 +30,15 @@ public class TaskController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping(value = "/{id}/categories")
+    public ResponseEntity<TaskCategoryDTO> findByIdWithCategories(@PathVariable Long id) {
+        TaskCategoryDTO dto = taskService.findByIdWithCategories(id);
+        return ResponseEntity.ok(dto);
+    }
+
     @GetMapping(value = "/{id}")
-    public ResponseEntity<TaskCategoryDTO> findById(@PathVariable Long id) {
-        TaskCategoryDTO dto = taskService.findById(id);
+    public ResponseEntity<TaskDTO> findById(@PathVariable Long id) {
+        TaskDTO dto = taskService.findById(id);
         return ResponseEntity.ok(dto);
     }
 
@@ -54,5 +60,11 @@ public class TaskController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         taskService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(value = "/{id}/{userId}")
+    public ResponseEntity<String> removeUserFromTask(@PathVariable Long id, @PathVariable Long userId) {
+        taskService.removeUserFromTask(id, userId);
+        return ResponseEntity.ok("User removed successfully");
     }
 }

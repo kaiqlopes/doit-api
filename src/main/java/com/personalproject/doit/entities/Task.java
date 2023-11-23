@@ -101,10 +101,6 @@ public class Task {
         return users;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
     public void setTaskStatus(ToDoStatus taskStatus) {
         this.taskStatus = taskStatus;
     }
