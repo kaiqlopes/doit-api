@@ -50,6 +50,7 @@ public class TaskController {
         return ResponseEntity.created(uri).body(dto);
     }
 
+
     @PutMapping(value = "/{id}")
     public ResponseEntity<TaskDTO> update(@PathVariable Long id, @RequestBody TaskDTO dto) {
         dto = taskService.update(id, dto);
@@ -66,5 +67,11 @@ public class TaskController {
     public ResponseEntity<String> removeUserFromTask(@PathVariable Long id, @PathVariable Long userId) {
         taskService.removeUserFromTask(id, userId);
         return ResponseEntity.ok("User removed successfully");
+    }
+
+    @PostMapping(value = "/{id}")
+    public ResponseEntity<String> shareTask(@PathVariable Long id, @RequestParam(name = "email", defaultValue = "") String userEmail) {
+        taskService.shareTask(id, userEmail);
+        return ResponseEntity.ok("Task successfully shared");
     }
 }

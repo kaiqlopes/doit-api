@@ -69,15 +69,14 @@ public class UserService {
             throw new ResourceNotFoundException("User doesn't exists");
         }
 
-        List<Long> ids = taskRepository.findAssociatedTasksWithOnlyOneUserId(id);
-        taskRepository.deleteAllById(ids);
-
         try {
             userRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Data integrity violation", e);
         }
 
+        List<Long> ids = taskRepository.findAssociatedTasksWithOnlyOneUserId(id);
+        taskRepository.deleteAllById(ids);
     }
 
     private void copyDtoToEntity(UserDTO dto, User entity) {

@@ -22,4 +22,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(nativeQuery = true, value = "DELETE FROM tb_user_task " +
             "WHERE user_id = :userId AND task_id = :id")
     void removeUserFromTask(@Param("id") Long id, @Param("userId") Long userId);
+
+    @Modifying
+    @Query(nativeQuery = true, value = "INSERT INTO tb_user_task " +
+            "(user_id, task_id) VALUES (:userId, :id)")
+    void shareTask(@Param("userId") Long UserId, @Param("id") Long id);
+
 }
