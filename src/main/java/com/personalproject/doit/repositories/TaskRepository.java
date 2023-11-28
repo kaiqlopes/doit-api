@@ -28,4 +28,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "(user_id, task_id) VALUES (:userId, :id)")
     void shareTask(@Param("userId") Long UserId, @Param("id") Long id);
 
+    @Query("SELECT t FROM Task t JOIN FETCH t.categories WHERE t.id = :id")
+    Task findByIdWithCategories(@Param("id") Long id);
 }

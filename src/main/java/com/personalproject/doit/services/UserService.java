@@ -2,7 +2,6 @@ package com.personalproject.doit.services;
 
 import com.personalproject.doit.dtos.UserDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
-import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.entities.User;
 import com.personalproject.doit.exceptions.DatabaseException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
@@ -15,9 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 @Service

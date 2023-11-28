@@ -5,7 +5,6 @@ import com.personalproject.doit.dtos.TaskCategoryDTO;
 import com.personalproject.doit.dtos.TaskDTO;
 import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Task;
-import com.personalproject.doit.entities.User;
 import com.personalproject.doit.exceptions.DatabaseException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.repositories.CategoryRepository;
@@ -17,8 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -43,8 +40,12 @@ public class TaskService {
 
     @Transactional(readOnly = true)
     public TaskCategoryDTO findByIdWithCategories(Long id) {
-        Task result = taskRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Resource not found"));
+        Task result = taskRepository.findByIdWithCategories(id);
+
+        if (result == null) {
+            throw new ResourceNotFoundException("Resource not found");
+        }
+
         return new TaskCategoryDTO(result);
     }
 

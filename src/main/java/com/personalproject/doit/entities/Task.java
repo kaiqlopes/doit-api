@@ -46,6 +46,17 @@ public class Task {
         this.priority = priority;
     }
 
+    public Task(Long id, String title, String description, LocalDateTime startDate, LocalDateTime finishDate, Integer priority, ToDoStatus taskStatus, Set<Category> categories) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.startDate = startDate;
+        this.finishDate = finishDate;
+        this.priority = priority;
+        this.taskStatus = taskStatus;
+        this.categories = categories;
+    }
+
     public Task() {
     }
 
