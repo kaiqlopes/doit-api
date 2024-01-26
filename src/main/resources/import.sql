@@ -66,6 +66,12 @@ INSERT INTO tb_task_categories(task_id, category_id) VALUES (12, 5);
 INSERT INTO tb_task_categories(task_id, category_id) VALUES (13, 2);
 INSERT INTO tb_task_categories(task_id, category_id) VALUES (13, 3);
 
+INSERT INTO tb_role(authority) VALUES ('ROLE_OPERATOR');
+
+INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 1);
+
+INSERT INTO tb_admin(task_admin_id, task_id) VALUES (1, 1);
+
 
 
 

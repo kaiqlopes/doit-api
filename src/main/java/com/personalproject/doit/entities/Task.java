@@ -34,6 +34,8 @@ public class Task {
         inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
     private Set<Category> categories = new HashSet<>();
 
+    @OneToMany(mappedBy = "task")
+    private List<Admin> admins = new ArrayList<>();
 
     public Task(Long id, String title, String description, LocalDateTime startDate, LocalDateTime finishDate, Integer priority) {
         this.id = id;

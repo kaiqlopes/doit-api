@@ -34,6 +34,8 @@ public class User implements UserDetails {
         inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
 
+    @OneToOne(mappedBy = "taskAdmin")
+    private Admin taskPermissions;
 
     public User(Long id, String name, String email, String phone, LocalDate birthDate, String password) {
         this.id = id;
@@ -94,6 +96,15 @@ public class User implements UserDetails {
 
     public void addRoles(Role role) {
         roles.add(role);
+    }
+
+    public boolean hasRole(String roleName) {
+        for (Role role : roles) {
+            if (role.getAuthority().equals(roleName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String getPassword() {

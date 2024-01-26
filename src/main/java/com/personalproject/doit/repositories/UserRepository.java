@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -15,6 +16,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(nativeQuery = true, value = "SELECT id FROM tb_user " +
             "WHERE email = :email")
     Long getUserIdByEmail(@Param("email") String email);
+
+    Optional<User> findByEmail(String username);
 
     @Query(nativeQuery = true, value = "SELECT tb_user.email AS username, tb_user.password, tb_role.id AS roleId, tb_role.authority " +
             "FROM tb_user " +
