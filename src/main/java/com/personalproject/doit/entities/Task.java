@@ -7,8 +7,6 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static jakarta.persistence.CascadeType.*;
-
 @Entity
 @Table(name = "tb_task")
 public class Task {

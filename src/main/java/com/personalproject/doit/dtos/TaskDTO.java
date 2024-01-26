@@ -1,20 +1,38 @@
 package com.personalproject.doit.dtos;
 
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.enums.ToDoStatus;
 
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskDTO {
 
     private Long id;
     private String title;
     private String description;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime startDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime finishDate;
     private Integer priority;
     private ToDoStatus taskStatus;
+
+    List<CategoryDTO> categories = new ArrayList<>();
 
     public TaskDTO(Long id, String title, String description, LocalDateTime startDate, LocalDateTime finishDate, Integer priority, ToDoStatus taskStatus) {
         this.id = id;
@@ -26,14 +44,18 @@ public class TaskDTO {
         this.taskStatus = taskStatus;
     }
 
-    public TaskDTO(Task task) {
-        id = task.getId();
-        title = task.getTitle();
-        description = task.getDescription();
-        startDate = task.getStartDate();
-        finishDate = task.getFinishDate();
-        priority = task.getPriority();
-        taskStatus = task.getTaskStatus();
+    public TaskDTO(Task entity) {
+        id = entity.getId();
+        title = entity.getTitle();
+        description = entity.getDescription();
+        startDate = entity.getStartDate();
+        finishDate = entity.getFinishDate();
+        priority = entity.getPriority();
+        taskStatus = entity.getTaskStatus();
+
+        for (Category cat : entity.getCategories()) {
+            categories.add(new CategoryDTO(cat));
+        }
     }
 
     public Long getId() {
@@ -90,5 +112,9 @@ public class TaskDTO {
 
     public void setTaskStatus(ToDoStatus taskStatus) {
         this.taskStatus = taskStatus;
+    }
+
+    public List<CategoryDTO> getCategories() {
+        return categories;
     }
 }

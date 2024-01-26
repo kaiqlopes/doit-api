@@ -1,7 +1,6 @@
 package com.personalproject.doit.services;
 
 import com.personalproject.doit.dtos.CategoryDTO;
-import com.personalproject.doit.dtos.TaskCategoryDTO;
 import com.personalproject.doit.dtos.TaskDTO;
 import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Task;
@@ -34,19 +33,10 @@ public class TaskService {
     @Transactional(readOnly = true)
     public TaskDTO findById(Long id) {
         Task result = taskRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Resource not found"));
+                () -> new ResourceNotFoundException("Resource not found")
+        );
+
         return new TaskDTO(result);
-    }
-
-    @Transactional(readOnly = true)
-    public TaskCategoryDTO findByIdWithCategories(Long id) {
-        Task result = taskRepository.findByIdWithCategories(id);
-
-        if (result == null) {
-            throw new ResourceNotFoundException("Resource not found");
-        }
-
-        return new TaskCategoryDTO(result);
     }
 
     @Transactional(readOnly = true)
@@ -56,22 +46,17 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskCategoryDTO insert(TaskCategoryDTO dto) {
+    public TaskDTO insert(TaskDTO dto) {
         Task entity = new Task();
         copyDtoToEntity(dto, entity);
         entity = taskRepository.save(entity);
-        return new TaskCategoryDTO(entity);
+        return new TaskDTO(entity);
     }
 
     @Transactional
     public TaskDTO update(Long id, TaskDTO dto) {
         Task entity = taskRepository.getReferenceById(id);
-        entity.setTitle(dto.getTitle());
-        entity.setDescription(dto.getDescription());
-        entity.setStartDate(dto.getStartDate());
-        entity.setFinishDate(dto.getFinishDate());
-        entity.setTaskStatus(dto.getTaskStatus());
-        entity.setPriority(dto.getPriority());
+        copyDtoToEntity(dto, entity);
         entity = taskRepository.save(entity);
         return new TaskDTO(entity);
     }
@@ -85,13 +70,13 @@ public class TaskService {
         try {
             taskRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Referential integrity violation", e);
+            throw new DataIntegrityViolationException("Referential integrity violation", e);
         }
     }
 
     @Transactional
     public void removeUserFromTask(Long id, Long userId) {
-        if (!taskRepository.existsById(id) && !userRepository.existsById(userId)) {
+        if (!taskRepository.existsById(id) || !userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("User or task id doesn't exist");
         }
 
@@ -109,7 +94,7 @@ public class TaskService {
         taskRepository.shareTask(userId, id);
     }
 
-    private void copyDtoToEntity(TaskCategoryDTO dto, Task entity) {
+    private void copyDtoToEntity(TaskDTO dto, Task entity) {
         entity.setTitle(dto.getTitle());
         entity.setDescription(dto.getDescription());
         entity.setStartDate(dto.getStartDate());
@@ -117,6 +102,7 @@ public class TaskService {
         entity.setTaskStatus(dto.getTaskStatus());
         entity.setPriority(dto.getPriority());
 
+        entity.getCategories().clear();
         for (CategoryDTO catDto : dto.getCategories()) {
             Category cat = categoryRepository.getReferenceById(catDto.getId());
             entity.getCategories().add(cat);

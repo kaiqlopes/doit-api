@@ -1,8 +1,6 @@
 package com.personalproject.doit.controllers;
 
-import com.personalproject.doit.dtos.TaskCategoryDTO;
 import com.personalproject.doit.dtos.TaskDTO;
-import com.personalproject.doit.dtos.UserMinDTO;
 import com.personalproject.doit.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,20 +28,16 @@ public class TaskController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping(value = "/{id}/categories")
-    public ResponseEntity<TaskCategoryDTO> findByIdWithCategories(@PathVariable Long id) {
-        TaskCategoryDTO dto = taskService.findByIdWithCategories(id);
-        return ResponseEntity.ok(dto);
-    }
-
     @GetMapping(value = "/{id}")
     public ResponseEntity<TaskDTO> findById(@PathVariable Long id) {
         TaskDTO dto = taskService.findById(id);
         return ResponseEntity.ok(dto);
     }
 
+
+
     @PostMapping
-    public ResponseEntity<TaskCategoryDTO> insert(@RequestBody TaskCategoryDTO dto) {
+    public ResponseEntity<TaskDTO> insert(@RequestBody TaskDTO dto) {
         dto = taskService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();

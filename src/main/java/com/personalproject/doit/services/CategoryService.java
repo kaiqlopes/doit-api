@@ -12,6 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+import static java.util.Arrays.stream;
+
 @Service
 public class CategoryService {
 
@@ -23,33 +27,9 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public CategoryDTO findById(Long id) {
-        Category result = categoryRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Resource not found"));
-        return new CategoryDTO(result);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<CategoryDTO> findAll(Pageable pageable) {
-        Page<Category> result = categoryRepository.findAll(pageable);
-        return result.map(CategoryDTO::new);
-    }
-
-    @Transactional
-    public CategoryDTO insert(CategoryDTO dto) {
-        Category entity = new Category();
-        entity.setName(dto.getName());
-
-        entity = categoryRepository.save(entity);
-        return new CategoryDTO(entity);
-    }
-
-    @Transactional
-    public CategoryDTO update(Long id, CategoryDTO dto) {
-        Category entity = categoryRepository.getReferenceById(id);
-        entity.setName(dto.getName());
-        entity = categoryRepository.save(entity);
-        return new CategoryDTO(entity);
+    public List<CategoryDTO> findAll() {
+        List<Category> result = categoryRepository.findAll();
+        return result.stream().map(CategoryDTO::new).toList();
     }
 
     @Transactional
