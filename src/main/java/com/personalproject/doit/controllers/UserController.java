@@ -23,12 +23,19 @@ public class UserController {
         userService = service;
     }
 
+    @GetMapping(value = "/me")
+    public ResponseEntity<UserMinDTO> getMe() {
+        UserMinDTO dto = userService.getMe();
+        return ResponseEntity.ok(dto);
+    }
+
     @GetMapping
     public ResponseEntity<Page<UserMinDTO>> findAll(Pageable pageable) {
         Page<UserMinDTO> dto = userService.findAll(pageable);
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping
     @RequestMapping(value = "/{id}")
     public ResponseEntity<UserMinDTO> findById(@PathVariable Long id) {
         UserMinDTO dto = userService.findById(id);

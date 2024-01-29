@@ -2,6 +2,7 @@ package com.personalproject.doit.dtos;
 
 import com.personalproject.doit.entities.Role;
 import com.personalproject.doit.entities.User;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -14,9 +15,12 @@ public class UserMinDTO {
     private String email;
     private String phone;
 
-    private Set<Role> roles = new HashSet<>();
+    private Set<String> roles = new HashSet<>();
 
-    public UserMinDTO(Long id, String name, String email, String phone, LocalDate birthDate) {
+    public UserMinDTO() {
+    }
+
+    public UserMinDTO(Long id, String name, String email, String phone) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -28,6 +32,10 @@ public class UserMinDTO {
         name = user.getName();
         email = user.getEmail();
         phone = user.getPhone();
+
+        for (GrantedAuthority role : user.getAuthorities()) {
+            roles.add(role.getAuthority());
+        }
     }
 
     public Long getId() {
@@ -62,7 +70,7 @@ public class UserMinDTO {
         this.phone = phone;
     }
 
-    public Set<Role> getRoles() {
+    public Set<String> getRoles() {
         return roles;
     }
 }

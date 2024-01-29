@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE email = :email")
     Long getUserIdByEmail(@Param("email") String email);
 
-    Optional<User> findByEmail(String username);
+    Optional<User> findByEmail(String email);
 
     @Query(nativeQuery = true, value = "SELECT tb_user.email AS username, tb_user.password, tb_role.id AS roleId, tb_role.authority " +
             "FROM tb_user " +

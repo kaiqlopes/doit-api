@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class AdminService {
 
@@ -50,7 +52,13 @@ public class AdminService {
     }
 
     public boolean isUserAdmin(Long taskId, Long userId) {
-        return repository.isUserAdmin(taskId, userId);
+        Optional<TaskAdmin> result = repository.isUserAdmin(taskId, userId);
+
+        if (!result.isEmpty()) {
+            return true;
+        }
+
+        return false;
     }
 
 }
