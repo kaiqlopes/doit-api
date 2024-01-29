@@ -1,8 +1,11 @@
 package com.personalproject.doit.dtos;
 
+import com.personalproject.doit.entities.Role;
 import com.personalproject.doit.entities.User;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 public class UserMinDTO {
 
@@ -10,14 +13,14 @@ public class UserMinDTO {
     private String name;
     private String email;
     private String phone;
-    private LocalDate birthDate;
+
+    private Set<Role> roles = new HashSet<>();
 
     public UserMinDTO(Long id, String name, String email, String phone, LocalDate birthDate) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.phone = phone;
-        this.birthDate = birthDate;
     }
 
     public UserMinDTO(User user) {
@@ -25,7 +28,6 @@ public class UserMinDTO {
         name = user.getName();
         email = user.getEmail();
         phone = user.getPhone();
-        birthDate = user.getBirthDate();
     }
 
     public Long getId() {
@@ -60,11 +62,7 @@ public class UserMinDTO {
         this.phone = phone;
     }
 
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
+    public Set<Role> getRoles() {
+        return roles;
     }
 }

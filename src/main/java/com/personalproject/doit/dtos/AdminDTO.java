@@ -1,6 +1,6 @@
 package com.personalproject.doit.dtos;
 
-import com.personalproject.doit.entities.Admin;
+import com.personalproject.doit.entities.TaskAdmin;
 
 public class AdminDTO {
 
@@ -14,9 +14,9 @@ public class AdminDTO {
         this.task = task;
     }
 
-    public AdminDTO(Admin entity) {
+    public AdminDTO(TaskAdmin entity) {
         id = entity.getId();
-        admin = new UserAdminDTO(entity.getTaskAdmin());
+        admin = new UserAdminDTO(entity.getAdmin());
         task = new TaskDTO(entity.getTask());
     }
 

@@ -2,12 +2,9 @@ package com.personalproject.doit.entities;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
-@Table(name = "tb_admin")
-public class Admin {
+@Table(name = "tb_task_admins")
+public class TaskAdmin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,18 +12,18 @@ public class Admin {
 
     @OneToOne
     @MapsId
-    private User taskAdmin;
+    private User admin;
 
     @ManyToOne
     @JoinColumn(name = "task_id")
     private Task task;
 
-    public Admin(User taskAdmin, Task task) {
-        this.taskAdmin = taskAdmin;
+    public TaskAdmin(User taskAdmin, Task task) {
+        this.admin = taskAdmin;
         this.task = task;
     }
 
-    public Admin() {
+    public TaskAdmin() {
     }
 
     public Long getId() {
@@ -37,12 +34,12 @@ public class Admin {
         this.id = id;
     }
 
-    public User getTaskAdmin() {
-        return taskAdmin;
+    public User getAdmin() {
+        return admin;
     }
 
-    public void setTaskAdmin(User taskAdmin) {
-        this.taskAdmin = taskAdmin;
+    public void setAdmin(User admin) {
+        this.admin = admin;
     }
 
     public Task getTask() {

@@ -2,9 +2,12 @@ package com.personalproject.doit.services;
 
 import com.personalproject.doit.dtos.CategoryDTO;
 import com.personalproject.doit.dtos.TaskDTO;
+import com.personalproject.doit.dtos.UserMinDTO;
 import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Task;
+import com.personalproject.doit.entities.User;
 import com.personalproject.doit.exceptions.DatabaseException;
+import com.personalproject.doit.exceptions.ForbiddenException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.repositories.CategoryRepository;
 import com.personalproject.doit.repositories.TaskRepository;
@@ -22,12 +25,16 @@ public class TaskService {
     private TaskRepository taskRepository;
     private CategoryRepository categoryRepository;
     private UserRepository userRepository;
+    private AdminService adminService;
+    private UserService userService;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
+    public TaskService(TaskRepository taskRepository, CategoryRepository categoryRepository, UserRepository userRepository, AdminService adminService, UserService userService) {
         this.taskRepository = taskRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
+        this.adminService = adminService;
+        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
@@ -75,12 +82,18 @@ public class TaskService {
     }
 
     @Transactional
-    public void removeUserFromTask(Long id, Long userId) {
-        if (!taskRepository.existsById(id) || !userRepository.existsById(userId)) {
+    public void removeUserFromTask(Long taskId, Long userId) {
+        UserMinDTO me = userService.getMe();
+
+        if (!adminService.isUserAdmin(taskId, me.getId())) {
+            throw new ForbiddenException("You are not an admin of this task");
+        }
+
+        if (!taskRepository.existsById(taskId) || !userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("User or task id doesn't exist");
         }
 
-        taskRepository.removeUserFromTask(id, userId);
+        taskRepository.removeUserFromTask(taskId, userId);
     }
 
     @Transactional

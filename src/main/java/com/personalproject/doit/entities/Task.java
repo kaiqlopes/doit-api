@@ -35,7 +35,7 @@ public class Task {
     private Set<Category> categories = new HashSet<>();
 
     @OneToMany(mappedBy = "task")
-    private List<Admin> admins = new ArrayList<>();
+    private List<TaskAdmin> admins = new ArrayList<>();
 
     public Task(Long id, String title, String description, LocalDateTime startDate, LocalDateTime finishDate, Integer priority) {
         this.id = id;

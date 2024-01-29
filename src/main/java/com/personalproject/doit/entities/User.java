@@ -34,8 +34,8 @@ public class User implements UserDetails {
         inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
 
-    @OneToOne(mappedBy = "taskAdmin")
-    private Admin taskPermissions;
+    @OneToOne(mappedBy = "admin")
+    private TaskAdmin taskPermissions;
 
     public User(Long id, String name, String email, String phone, LocalDate birthDate, String password) {
         this.id = id;

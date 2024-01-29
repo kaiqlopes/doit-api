@@ -1,9 +1,9 @@
-INSERT INTO tb_user (name, email, phone, birth_date, password) VALUES ('Kaique', 'kaique@gmail.com', '1140028922', '1998-10-14', 'senhaTeste0');
-INSERT INTO tb_user (name, email, phone, birth_date, password) VALUES ('Gabriela', 'gabriela@gmail.com', '1140028923', '1998-10-14', 'senhaTeste1');
-INSERT INTO tb_user (name, email, phone, birth_date, password) VALUES ('Sunny', 'sunny@gmail.com', '1140028924', '2019-01-05', 'senhaTeste2');
-INSERT INTO tb_user (name, email, phone, birth_date, password) VALUES ('Thor', 'thorzinho@gmail.com', '1140028925', '2023-04-01', 'senhaTeste3');
-INSERT INTO tb_user (name, email, phone, birth_date, password) VALUES ('Pandora', 'pandorinha@gmail.com', '1140028926', '2021-06-10', 'senhaTeste4');
-INSERT INTO tb_user (name, email, phone, birth_date, password) VALUES ('Rex', 'rex@gmail.com', '1140028927', '2010-03-15', 'senhaTeste5');
+INSERT INTO tb_user (name, email, phone, birth_date, password) VALUES ('Kaique', 'kaique@gmail.com', '1140028922', '1998-10-14', '$2a$10$fbvy4mIiu21S5QKHXUYy4OofM6pHda67pVlPGEZWQja3YPLus85kS');
+INSERT INTO tb_user (name, email, phone, birth_date, password) VALUES ('Gabriela', 'gabriela@gmail.com', '1140028923', '1998-10-14', '$2a$10$dnt1xDg4OVZpAGTPtDDDf.d7hXsk/1nlfQ73AWqex/MKDf4WDGqIK');
+INSERT INTO tb_user (name, email, phone, birth_date, password) VALUES ('Sunny', 'sunny@gmail.com', '1140028924', '2019-01-05', '$2a$10$dnt1xDg4OVZpAGTPtDDDf.d7hXsk/1nlfQ73AWqex/MKDf4WDGqIK');
+INSERT INTO tb_user (name, email, phone, birth_date, password) VALUES ('Thor', 'thorzinho@gmail.com', '1140028925', '2023-04-01', '$2a$10$dnt1xDg4OVZpAGTPtDDDf.d7hXsk/1nlfQ73AWqex/MKDf4WDGqIK');
+INSERT INTO tb_user (name, email, phone, birth_date, password) VALUES ('Pandora', 'pandorinha@gmail.com', '1140028926', '2021-06-10', '$2a$10$dnt1xDg4OVZpAGTPtDDDf.d7hXsk/1nlfQ73AWqex/MKDf4WDGqIK');
+INSERT INTO tb_user (name, email, phone, birth_date, password) VALUES ('Rex', 'rex@gmail.com', '1140028927', '2010-03-15', '$2a$10$dnt1xDg4OVZpAGTPtDDDf.d7hXsk/1nlfQ73AWqex/MKDf4WDGqIK');
 
 INSERT INTO tb_task (title, description, start_date, finish_date, priority, task_status) VALUES ('Estudar Java', 'Continuar os estudos sobre Java', NULL, NULL, 1, 'IN_PROGRESS');
 INSERT INTO tb_task (title, description, start_date, finish_date, priority, task_status) VALUES ('Projeto pessoal - Do It', 'Finalizar o projeto pessoal Do It (To Do List)', '2023-11-15', '2023-11-30 23:59:59', 1, 'IN_PROGRESS');
@@ -20,6 +20,7 @@ INSERT INTO tb_task (title, description, start_date, finish_date, priority, task
 INSERT INTO tb_task (title, description, start_date, finish_date, priority, task_status) VALUES ('Prova de Engenharia de Software', null, '2023-01-16 19:30:00', '2023-11-30 21:30:00', 2, 'TO_DO');
 
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 1);
+INSERT INTO tb_user_task (user_id, task_id) VALUES (2, 1);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 2);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 3);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 5);
@@ -70,7 +71,7 @@ INSERT INTO tb_role(authority) VALUES ('ROLE_OPERATOR');
 
 INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 1);
 
-INSERT INTO tb_admin(task_admin_id, task_id) VALUES (1, 1);
+INSERT INTO tb_task_admins(admin_id, task_id) VALUES (1, 1);
 
 
 
