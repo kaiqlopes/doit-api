@@ -70,9 +70,17 @@ public class TaskService {
 
     @Transactional
     public void deleteById(Long id) {
+        UserMinDTO me = userService.getMe();
+
         if (!taskRepository.existsById(id)) {
             throw new ResourceNotFoundException("The resource you want to delete was not found");
         }
+
+        if (!adminService.isUserAdmin(id, me.getId())) {
+            throw new ForbiddenException("You are not an admin of this task");
+        }
+
+        taskRepository.removeAllUsersFromTask(id);
 
         try {
             taskRepository.deleteById(id);
@@ -81,6 +89,7 @@ public class TaskService {
         }
     }
 
+    //N+1
     @Transactional
     public void removeUserFromTask(Long taskId, Long userId) {
         UserMinDTO me = userService.getMe();
@@ -96,15 +105,22 @@ public class TaskService {
         taskRepository.removeUserFromTask(taskId, userId);
     }
 
+    //N+1
     @Transactional
-    public void shareTask(Long id, String userEmail) {
+    public void shareTask(Long taskId, String userEmail) {
+        UserMinDTO me = userService.getMe();
+
+        if (!adminService.isUserAdmin(taskId, me.getId())) {
+            throw new ForbiddenException("You are not an admin of this task");
+        }
+
         Long userId = userRepository.getUserIdByEmail(userEmail);
 
         if (userId == null) {
             throw new ResourceNotFoundException("The user you want to share the task doesn't exist");
         }
 
-        taskRepository.shareTask(userId, id);
+        taskRepository.shareTask(userId, taskId);
     }
 
     private void copyDtoToEntity(TaskDTO dto, Task entity) {

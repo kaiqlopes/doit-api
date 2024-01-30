@@ -37,6 +37,8 @@ INSERT INTO tb_user_task (user_id, task_id) VALUES (3, 6);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (4, 6);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (5, 6);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (6, 6);
+INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 13);
+INSERT INTO tb_user_task (user_id, task_id) VALUES (2, 13);
 
 INSERT INTO tb_category (name) VALUES ('Exercícios');
 INSERT INTO tb_category (name) VALUES ('Estudos');
@@ -76,7 +78,8 @@ INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 4);
 INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 5);
 INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 6);
 
-INSERT INTO tb_task_admins(admin_id, task_id) VALUES (1, 1);
+INSERT INTO tb_task_admins(user_id, task_id) VALUES (1, 1);
+INSERT INTO tb_task_admins(user_id, task_id) VALUES (1, 13);
 
 
 

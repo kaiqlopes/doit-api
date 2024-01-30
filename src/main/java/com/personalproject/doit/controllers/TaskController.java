@@ -1,6 +1,6 @@
 package com.personalproject.doit.controllers;
 
-import com.personalproject.doit.dtos.AdminDTO;
+import com.personalproject.doit.dtos.TaskAdminDTO;
 import com.personalproject.doit.dtos.TaskDTO;
 import com.personalproject.doit.services.AdminService;
 import com.personalproject.doit.services.TaskService;
@@ -27,7 +27,7 @@ public class TaskController {
     }
 
     @PostMapping(value = "/addAdmin")
-    public ResponseEntity<AdminDTO> addAdmin(@RequestBody AdminDTO dto) {
+    public ResponseEntity<TaskAdminDTO> addAdmin(@RequestBody TaskAdminDTO dto) {
         dto = adminService.addAdmin(dto);
         return ResponseEntity.ok(dto);
     }

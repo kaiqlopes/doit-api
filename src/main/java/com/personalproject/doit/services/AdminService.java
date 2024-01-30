@@ -1,6 +1,6 @@
 package com.personalproject.doit.services;
 
-import com.personalproject.doit.dtos.AdminDTO;
+import com.personalproject.doit.dtos.TaskAdminDTO;
 import com.personalproject.doit.entities.TaskAdmin;
 import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.entities.User;
@@ -29,7 +29,7 @@ public class AdminService {
     }
 
     @Transactional
-    public AdminDTO addAdmin(AdminDTO dto) {
+    public TaskAdminDTO addAdmin(TaskAdminDTO dto) {
 
         Long userId = dto.getAdmin().getId();
         Long taskId = dto.getTask().getId();
@@ -48,13 +48,13 @@ public class AdminService {
 
         entity = repository.save(entity);
 
-        return new AdminDTO(entity);
+        return new TaskAdminDTO(entity);
     }
 
     public boolean isUserAdmin(Long taskId, Long userId) {
-        Optional<TaskAdmin> result = repository.isUserAdmin(taskId, userId);
+        Optional<Integer> result = repository.isUserAdmin(taskId, userId);
 
-        if (!result.isEmpty()) {
+        if (result.get() > 0) {
             return true;
         }
 
