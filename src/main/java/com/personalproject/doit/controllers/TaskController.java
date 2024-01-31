@@ -26,10 +26,10 @@ public class TaskController {
         this.adminService = adminService;
     }
 
-    @PostMapping(value = "/addAdmin")
-    public ResponseEntity<TaskAdminDTO> addAdmin(@RequestBody TaskAdminDTO dto) {
-        dto = adminService.addAdmin(dto);
-        return ResponseEntity.ok(dto);
+    @PostMapping(value = "{id}/{userId}/addAdmin")
+    public ResponseEntity<String> addAdmin(@PathVariable Long id, @PathVariable Long userId) {
+        adminService.addAdmin(id, userId);
+        return ResponseEntity.ok("Admin added");
     }
 
     @GetMapping

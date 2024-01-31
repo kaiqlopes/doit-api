@@ -36,7 +36,7 @@ public class User implements UserDetails {
 
 
     @OneToMany(mappedBy = "admin")
-    private List<TaskAdmin> taskPermissions;
+    private Set<TaskAdmin> taskPermissions = new HashSet<>();
 
     public User(Long id, String name, String email, String phone, LocalDate birthDate, String password) {
         this.id = id;
@@ -88,6 +88,14 @@ public class User implements UserDetails {
 
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public Set<TaskAdmin> getTaskPermissions() {
+        return taskPermissions;
     }
 
     @Override

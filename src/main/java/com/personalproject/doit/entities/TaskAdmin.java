@@ -2,6 +2,8 @@ package com.personalproject.doit.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "tb_task_admins")
 public class TaskAdmin {
@@ -48,5 +50,23 @@ public class TaskAdmin {
 
     public void setTask(Task task) {
         this.task = task;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TaskAdmin taskAdmin = (TaskAdmin) o;
+
+        if (!Objects.equals(admin, taskAdmin.admin)) return false;
+        return Objects.equals(task, taskAdmin.task);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = admin != null ? admin.hashCode() : 0;
+        result = 31 * result + (task != null ? task.hashCode() : 0);
+        return result;
     }
 }

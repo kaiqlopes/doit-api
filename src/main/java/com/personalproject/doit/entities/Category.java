@@ -40,6 +40,10 @@ public class Category {
         this.name = name;
     }
 
+    public Set<Task> getTasks() {
+        return tasks;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -10,6 +10,7 @@ import com.personalproject.doit.exceptions.DatabaseException;
 import com.personalproject.doit.exceptions.ForbiddenException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.repositories.CategoryRepository;
+import com.personalproject.doit.repositories.TaskAdminRepository;
 import com.personalproject.doit.repositories.TaskRepository;
 import com.personalproject.doit.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,15 @@ public class TaskService {
     private CategoryRepository categoryRepository;
     private UserRepository userRepository;
     private AdminService adminService;
-    private UserService userService;
+    private TaskAdminRepository taskAdminRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, CategoryRepository categoryRepository, UserRepository userRepository, AdminService adminService, UserService userService) {
+    public TaskService(TaskRepository taskRepository, CategoryRepository categoryRepository, UserRepository userRepository, AdminService adminService, TaskAdminRepository taskAdminRepository) {
         this.taskRepository = taskRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.adminService = adminService;
-        this.userService = userService;
+        this.taskAdminRepository = taskAdminRepository;
     }
 
     @Transactional(readOnly = true)
@@ -62,6 +63,10 @@ public class TaskService {
 
     @Transactional
     public TaskDTO update(Long id, TaskDTO dto) {
+        if (!adminService.isUserAdmin(id)) {
+            throw new ForbiddenException("You are not an admin of this task");
+        }
+
         Task entity = taskRepository.getReferenceById(id);
         copyDtoToEntity(dto, entity);
         entity = taskRepository.save(entity);
@@ -70,16 +75,15 @@ public class TaskService {
 
     @Transactional
     public void deleteById(Long id) {
-        UserMinDTO me = userService.getMe();
-
         if (!taskRepository.existsById(id)) {
             throw new ResourceNotFoundException("The resource you want to delete was not found");
         }
 
-        if (!adminService.isUserAdmin(id, me.getId())) {
+        if (!adminService.isUserAdmin(id)) {
             throw new ForbiddenException("You are not an admin of this task");
         }
 
+        taskAdminRepository.deleteAssociatedAdmins(id);
         taskRepository.removeAllUsersFromTask(id);
 
         try {
@@ -92,9 +96,7 @@ public class TaskService {
     //N+1
     @Transactional
     public void removeUserFromTask(Long taskId, Long userId) {
-        UserMinDTO me = userService.getMe();
-
-        if (!adminService.isUserAdmin(taskId, me.getId())) {
+        if (!adminService.isUserAdmin(taskId)) {
             throw new ForbiddenException("You are not an admin of this task");
         }
 
@@ -108,9 +110,7 @@ public class TaskService {
     //N+1
     @Transactional
     public void shareTask(Long taskId, String userEmail) {
-        UserMinDTO me = userService.getMe();
-
-        if (!adminService.isUserAdmin(taskId, me.getId())) {
+        if (!adminService.isUserAdmin(taskId)) {
             throw new ForbiddenException("You are not an admin of this task");
         }
 

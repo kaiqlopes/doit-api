@@ -26,16 +26,16 @@ public class Task {
     private ToDoStatus taskStatus;
 
     @ManyToMany(mappedBy = "tasks")
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "tb_task_categories",
-        joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
     @OneToMany(mappedBy = "task")
-    private List<TaskAdmin> admins = new ArrayList<>();
+    private Set<TaskAdmin> admins = new HashSet<>();
 
     public Task(Long id, String title, String description, LocalDateTime startDate, LocalDateTime finishDate, Integer priority) {
         this.id = id;
@@ -108,7 +108,7 @@ public class Task {
         this.priority = priority;
     }
 
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
@@ -124,8 +124,8 @@ public class Task {
         return categories;
     }
 
-    public void setCategories(Set<Category> categories) {
-        this.categories = categories;
+    public Set<TaskAdmin> getAdmins() {
+        return admins;
     }
 
     @Override

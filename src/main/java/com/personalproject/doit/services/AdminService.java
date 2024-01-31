@@ -1,9 +1,11 @@
 package com.personalproject.doit.services;
 
 import com.personalproject.doit.dtos.TaskAdminDTO;
+import com.personalproject.doit.dtos.UserMinDTO;
 import com.personalproject.doit.entities.TaskAdmin;
 import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.entities.User;
+import com.personalproject.doit.exceptions.ForbiddenException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.repositories.TaskAdminRepository;
 import com.personalproject.doit.repositories.TaskRepository;
@@ -20,45 +22,40 @@ public class AdminService {
     private TaskAdminRepository repository;
     private UserRepository userRepository;
     private TaskRepository taskRepository;
+    private UserService userService;
 
     @Autowired
-    public AdminService(TaskAdminRepository repository, UserRepository userRepository, TaskRepository taskRepository) {
+    public AdminService(TaskAdminRepository repository, UserRepository userRepository, TaskRepository taskRepository, UserService userService) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
+        this.userService = userService;
     }
 
     @Transactional
-    public TaskAdminDTO addAdmin(TaskAdminDTO dto) {
+    public void addAdmin(Long id, Long userId) {
+        if (!isUserAdmin(id)) {
+            throw new ForbiddenException("You are not an admin of this task");
+        }
 
-        Long userId = dto.getAdmin().getId();
-        Long taskId = dto.getTask().getId();
+        if (!taskRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Task not found");
+        }
 
         if (!userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("User not found");
         }
 
-        if (!taskRepository.existsById(taskId)) {
-            throw new ResourceNotFoundException("Task not found");
-        }
-
-        User user = userRepository.getReferenceById(userId);
-        Task task = taskRepository.getReferenceById(taskId);
-        TaskAdmin entity = new TaskAdmin(user, task);
-
-        entity = repository.save(entity);
-
-        return new TaskAdminDTO(entity);
+        repository.addAdmin(id, userId);
     }
 
-    public boolean isUserAdmin(Long taskId, Long userId) {
-        Optional<Integer> result = repository.isUserAdmin(taskId, userId);
+   @Transactional(readOnly = true)
+   public boolean isUserAdmin(Long taskId) {
+        UserMinDTO me = userService.getMe();
 
-        if (result.get() > 0) {
-            return true;
-        }
+        Optional<Integer> result = repository.isUserAdmin(taskId, me.getId());
 
-        return false;
+        return result.get() > 0;
     }
 
 }
