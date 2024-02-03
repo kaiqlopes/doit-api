@@ -5,12 +5,9 @@ import com.personalproject.doit.dtos.TaskDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
 import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Task;
-import com.personalproject.doit.entities.User;
-import com.personalproject.doit.exceptions.DatabaseException;
 import com.personalproject.doit.exceptions.ForbiddenException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.repositories.CategoryRepository;
-import com.personalproject.doit.repositories.TaskAdminRepository;
 import com.personalproject.doit.repositories.TaskRepository;
 import com.personalproject.doit.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +24,17 @@ public class TaskService {
     private CategoryRepository categoryRepository;
     private UserRepository userRepository;
     private AdminService adminService;
-    private TaskAdminRepository taskAdminRepository;
+    private UserService userService;
+    private AuthService authService;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, CategoryRepository categoryRepository, UserRepository userRepository, AdminService adminService, TaskAdminRepository taskAdminRepository) {
+    public TaskService(TaskRepository taskRepository, CategoryRepository categoryRepository, UserRepository userRepository, AdminService adminService, UserService userService, AuthService authService) {
         this.taskRepository = taskRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.adminService = adminService;
-        this.taskAdminRepository = taskAdminRepository;
+        this.userService = userService;
+        this.authService = authService;
     }
 
     @Transactional(readOnly = true)
@@ -43,6 +42,8 @@ public class TaskService {
         Task result = taskRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Resource not found")
         );
+
+        authService.validateTaskUser(id);
 
         return new TaskDTO(result);
     }
@@ -55,9 +56,14 @@ public class TaskService {
 
     @Transactional
     public TaskDTO insert(TaskDTO dto) {
+        UserMinDTO me = userService.getMe();
+
         Task entity = new Task();
         copyDtoToEntity(dto, entity);
         entity = taskRepository.save(entity);
+
+        taskRepository.addAdmin(entity.getId(), me.getId());
+
         return new TaskDTO(entity);
     }
 
@@ -83,7 +89,7 @@ public class TaskService {
             throw new ForbiddenException("You are not an admin of this task");
         }
 
-        taskAdminRepository.deleteAssociatedAdmins(id);
+        taskRepository.removeAssociatedAdmins(id);
         taskRepository.removeAllUsersFromTask(id);
 
         try {
@@ -102,6 +108,10 @@ public class TaskService {
 
         if (!taskRepository.existsById(taskId) || !userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("User or task id doesn't exist");
+        }
+
+        if (taskRepository.isUserAdmin(taskId, userId).get() > 0) {
+            taskRepository.removeAdmin(userId);
         }
 
         taskRepository.removeUserFromTask(taskId, userId);

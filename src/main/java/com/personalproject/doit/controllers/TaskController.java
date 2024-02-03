@@ -1,6 +1,5 @@
 package com.personalproject.doit.controllers;
 
-import com.personalproject.doit.dtos.TaskAdminDTO;
 import com.personalproject.doit.dtos.TaskDTO;
 import com.personalproject.doit.services.AdminService;
 import com.personalproject.doit.services.TaskService;

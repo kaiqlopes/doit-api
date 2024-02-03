@@ -8,9 +8,23 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
+
+    @Modifying
+    @Query(nativeQuery = true, value = "INSERT INTO tb_task_admins(task_id, user_id) " +
+            "VALUES(:taskId, :userId)")
+    void addAdmin(Long taskId, Long userId);
+
+    @Query(nativeQuery = true, value = "SELECT count(*) FROM tb_task_admins " +
+            "WHERE user_id = :userId AND task_id = :taskId")
+    Optional<Integer> isUserAdmin(Long taskId, Long userId);
+
+    @Query(nativeQuery = true, value = "SELECT count(*) FROM tb_user_task " +
+            "WHERE task_id = :taskId AND user_id = :userId")
+    Optional<Integer> validateTaskUser(Long taskId, Long userId);
 
     @Query(nativeQuery = true, value = "SELECT task_id " +
             "FROM tb_user_task " +
@@ -37,4 +51,14 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(nativeQuery = true, value = "DELETE FROM tb_task_categories " +
             "WHERE task_id = :taskId")
     void removeAssociatedCategories(Long taskId);
+
+    @Modifying
+    @Query(nativeQuery = true, value = "DELETE FROM tb_task_admins " +
+            "WHERE user_id = :userId")
+    void removeAdmin(Long userId);
+
+    @Modifying
+    @Query(nativeQuery = true, value = "DELETE FROM tb_task_admins " +
+            "WHERE task_id = :taskId")
+    void removeAssociatedAdmins(Long taskId);
 }

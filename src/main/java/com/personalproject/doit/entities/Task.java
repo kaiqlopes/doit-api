@@ -34,8 +34,11 @@ public class Task {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
-    @OneToMany(mappedBy = "task")
-    private Set<TaskAdmin> admins = new HashSet<>();
+    @ManyToMany
+    @JoinTable(name = "tb_task_admins",
+        joinColumns = @JoinColumn(name = "task_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> admins = new HashSet<>();
 
     public Task(Long id, String title, String description, LocalDateTime startDate, LocalDateTime finishDate, Integer priority) {
         this.id = id;
@@ -124,7 +127,7 @@ public class Task {
         return categories;
     }
 
-    public Set<TaskAdmin> getAdmins() {
+    public Set<User> getAdmins() {
         return admins;
     }
 

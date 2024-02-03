@@ -35,8 +35,8 @@ public class User implements UserDetails {
     private List<Role> roles = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "admin")
-    private Set<TaskAdmin> taskPermissions = new HashSet<>();
+    @ManyToMany(mappedBy = "admins")
+    private Set<Task> taskPermissions = new HashSet<>();
 
     public User(Long id, String name, String email, String phone, LocalDate birthDate, String password) {
         this.id = id;
@@ -94,7 +94,7 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public Set<TaskAdmin> getTaskPermissions() {
+    public Set<Task> getTaskPermissions() {
         return taskPermissions;
     }
 
