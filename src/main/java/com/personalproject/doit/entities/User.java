@@ -1,5 +1,6 @@
 package com.personalproject.doit.entities;
 
+import com.personalproject.doit.dtos.UserMinDTO;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +33,7 @@ public class User implements UserDetails {
     @JoinTable(name = "tb_user_role",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
 
     @ManyToMany(mappedBy = "admins")
@@ -90,7 +91,7 @@ public class User implements UserDetails {
         this.birthDate = birthDate;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/tasks")
@@ -32,8 +33,8 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<TaskDTO>> findAll(Pageable pageable) {
-        Page<TaskDTO> dto = service.findAll(pageable);
+    public ResponseEntity<List<TaskDTO>> findAll() {
+        List<TaskDTO> dto = service.findAll();
         return ResponseEntity.ok(dto);
     }
 

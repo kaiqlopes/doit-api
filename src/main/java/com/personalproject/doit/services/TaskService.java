@@ -5,6 +5,7 @@ import com.personalproject.doit.dtos.TaskDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
 import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Task;
+import com.personalproject.doit.entities.User;
 import com.personalproject.doit.exceptions.ForbiddenException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.repositories.CategoryRepository;
@@ -16,6 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class TaskService {
@@ -49,9 +53,12 @@ public class TaskService {
     }
 
     @Transactional(readOnly = true)
-    public Page<TaskDTO> findAll(Pageable pageable) {
-        Page<Task> result = taskRepository.findAll(pageable);
-        return result.map(TaskDTO::new);
+    public List<TaskDTO> findAll() {
+        User me = userService.authenticated();
+
+        List<Task> result = taskRepository.findAllByUserId(me.getId());
+
+        return result.stream().map(TaskDTO::new).toList();
     }
 
     @Transactional
@@ -68,32 +75,28 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskDTO update(Long id, TaskDTO dto) {
-        if (!adminService.isUserAdmin(id)) {
-            throw new ForbiddenException("You are not an admin of this task");
-        }
+    public TaskDTO update(Long taskId, TaskDTO dto) {
+        adminService.isUserAdmin(taskId);
 
-        Task entity = taskRepository.getReferenceById(id);
+        Task entity = taskRepository.getReferenceById(taskId);
         copyDtoToEntity(dto, entity);
         entity = taskRepository.save(entity);
         return new TaskDTO(entity);
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        if (!taskRepository.existsById(id)) {
+    public void deleteById(Long taskId) {
+        if (!taskRepository.existsById(taskId)) {
             throw new ResourceNotFoundException("The resource you want to delete was not found");
         }
 
-        if (!adminService.isUserAdmin(id)) {
-            throw new ForbiddenException("You are not an admin of this task");
-        }
+        adminService.isUserAdmin(taskId);
 
-        taskRepository.removeAssociatedAdmins(id);
-        taskRepository.removeAllUsersFromTask(id);
+        taskRepository.removeAssociatedAdmins(taskId);
+        taskRepository.removeAllUsersFromTask(taskId);
 
         try {
-            taskRepository.deleteById(id);
+            taskRepository.deleteById(taskId);
         } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityViolationException("Referential integrity violation", e);
         }
@@ -102,9 +105,7 @@ public class TaskService {
     //N+1
     @Transactional
     public void removeUserFromTask(Long taskId, Long userId) {
-        if (!adminService.isUserAdmin(taskId)) {
-            throw new ForbiddenException("You are not an admin of this task");
-        }
+        adminService.isUserAdmin(taskId);
 
         if (!taskRepository.existsById(taskId) || !userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("User or task id doesn't exist");
@@ -120,9 +121,7 @@ public class TaskService {
     //N+1
     @Transactional
     public void shareTask(Long taskId, String userEmail) {
-        if (!adminService.isUserAdmin(taskId)) {
-            throw new ForbiddenException("You are not an admin of this task");
-        }
+        adminService.isUserAdmin(taskId);
 
         Long userId = userRepository.getUserIdByEmail(userEmail);
 

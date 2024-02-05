@@ -27,9 +27,7 @@ public class AdminService {
 
     @Transactional
     public void addAdmin(Long id, Long userId) {
-        if (!isUserAdmin(id)) {
-            throw new ForbiddenException("You are not an admin of this task");
-        }
+        isUserAdmin(id);
 
         if (!taskRepository.existsById(id)) {
             throw new ResourceNotFoundException("Task not found");
@@ -43,12 +41,14 @@ public class AdminService {
     }
 
    @Transactional(readOnly = true)
-   public boolean isUserAdmin(Long taskId) {
+   public void isUserAdmin(Long taskId) {
         UserMinDTO me = userService.getMe();
 
         Optional<Integer> result = taskRepository.isUserAdmin(taskId, me.getId());
 
-        return result.get() > 0;
+        if (result.get() == 0) {
+            throw new ForbiddenException("You are not an admin of this task");
+        }
     }
 
 }
