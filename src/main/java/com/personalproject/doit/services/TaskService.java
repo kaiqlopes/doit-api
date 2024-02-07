@@ -13,13 +13,12 @@ import com.personalproject.doit.repositories.TaskRepository;
 import com.personalproject.doit.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 public class TaskService {
@@ -41,6 +40,7 @@ public class TaskService {
         this.authService = authService;
     }
 
+
     @Transactional(readOnly = true)
     public TaskDTO findById(Long id) {
         Task result = taskRepository.findById(id).orElseThrow(
@@ -52,14 +52,16 @@ public class TaskService {
         return new TaskDTO(result);
     }
 
+
     @Transactional(readOnly = true)
     public List<TaskDTO> findAll() {
         User me = userService.authenticated();
 
-        List<Task> result = taskRepository.findAllByUserId(me.getId());
+        List<Task> result = taskRepository.findAllTasksByUserId(me.getId());
 
         return result.stream().map(TaskDTO::new).toList();
     }
+
 
     @Transactional
     public TaskDTO insert(TaskDTO dto) {
@@ -74,6 +76,7 @@ public class TaskService {
         return new TaskDTO(entity);
     }
 
+
     @Transactional
     public TaskDTO update(Long taskId, TaskDTO dto) {
         adminService.isUserAdmin(taskId);
@@ -84,6 +87,7 @@ public class TaskService {
         return new TaskDTO(entity);
     }
 
+
     @Transactional
     public void deleteById(Long taskId) {
         if (!taskRepository.existsById(taskId)) {
@@ -91,8 +95,6 @@ public class TaskService {
         }
 
         adminService.isUserAdmin(taskId);
-
-        taskRepository.removeAssociatedAdmins(taskId);
         taskRepository.removeAllUsersFromTask(taskId);
 
         try {
@@ -102,7 +104,7 @@ public class TaskService {
         }
     }
 
-    //N+1
+
     @Transactional
     public void removeUserFromTask(Long taskId, Long userId) {
         adminService.isUserAdmin(taskId);
@@ -118,7 +120,6 @@ public class TaskService {
         taskRepository.removeUserFromTask(taskId, userId);
     }
 
-    //N+1
     @Transactional
     public void shareTask(Long taskId, String userEmail) {
         adminService.isUserAdmin(taskId);

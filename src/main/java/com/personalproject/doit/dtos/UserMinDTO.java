@@ -38,6 +38,16 @@ public class UserMinDTO {
         }
     }
 
+    public boolean hasRole(String roleName) {
+        for (String role : roles) {
+            if (role.equals(roleName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public Long getId() {
         return id;
     }

@@ -70,8 +70,10 @@ INSERT INTO tb_task_categories(task_id, category_id) VALUES (13, 2);
 INSERT INTO tb_task_categories(task_id, category_id) VALUES (13, 3);
 
 INSERT INTO tb_role(authority) VALUES ('ROLE_OPERATOR');
+INSERT INTO tb_role(authority) VALUES ('ROLE_ADMIN');
 
 INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 1);
+INSERT INTO tb_user_role(role_id, user_id) VALUES (2, 1);
 INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 2);
 INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 3);
 INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 4);

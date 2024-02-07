@@ -24,7 +24,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "JOIN FETCH obj.categories " +
             "JOIN obj.users u " +
             "WHERE u.id = :userId")
-    List<Task> findAllByUserId(@Param("userId") Long userId);
+    List<Task> findAllTasksByUserId(@Param("userId") Long userId);
 
     @Query(nativeQuery = true, value = "SELECT count(*) FROM tb_task_admins " +
             "WHERE user_id = :userId AND task_id = :taskId")

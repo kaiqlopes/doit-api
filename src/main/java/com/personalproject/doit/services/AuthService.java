@@ -25,7 +25,7 @@ public class AuthService {
     public void validateTaskUser(Long taskId) {
         UserMinDTO me = userService.getMe();
 
-        if (taskRepository.validateTaskUser(taskId, me.getId()).get() < 1) {
+        if (!me.hasRole("ROLE_ADMIN") && taskRepository.validateTaskUser(taskId, me.getId()).get() < 1) {
             throw new ForbiddenException("Access denied");
         }
     }

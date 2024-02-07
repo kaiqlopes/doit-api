@@ -27,7 +27,7 @@ public class User implements UserDetails {
     @JoinTable(name = "tb_user_task",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "task_id"))
-    private List<Task> tasks = new ArrayList<>();
+    private Set<Task> tasks = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "tb_user_role",
@@ -150,7 +150,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public List<Task> getTasks() {
+    public Set<Task> getTasks() {
         return tasks;
     }
 
