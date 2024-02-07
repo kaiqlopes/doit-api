@@ -1,11 +1,13 @@
 package com.personalproject.doit.services;
 
+import com.personalproject.doit.config.AuthorizationServerConfig;
 import com.personalproject.doit.dtos.CategoryDTO;
 import com.personalproject.doit.dtos.TaskDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
 import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.entities.User;
+import com.personalproject.doit.exceptions.DatabaseException;
 import com.personalproject.doit.exceptions.ForbiddenException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.repositories.CategoryRepository;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -65,7 +68,7 @@ public class TaskService {
 
     @Transactional
     public TaskDTO insert(TaskDTO dto) {
-        UserMinDTO me = userService.getMe();
+        User me = userService.authenticated();
 
         Task entity = new Task();
         copyDtoToEntity(dto, entity);
@@ -79,9 +82,10 @@ public class TaskService {
 
     @Transactional
     public TaskDTO update(Long taskId, TaskDTO dto) {
+        Task entity = taskRepository.getReferenceById(taskId);
+
         adminService.isUserAdmin(taskId);
 
-        Task entity = taskRepository.getReferenceById(taskId);
         copyDtoToEntity(dto, entity);
         entity = taskRepository.save(entity);
         return new TaskDTO(entity);
@@ -107,11 +111,11 @@ public class TaskService {
 
     @Transactional
     public void removeUserFromTask(Long taskId, Long userId) {
-        adminService.isUserAdmin(taskId);
-
         if (!taskRepository.existsById(taskId) || !userRepository.existsById(userId)) {
-            throw new ResourceNotFoundException("User or task id doesn't exist");
+            throw new ResourceNotFoundException("User or task doesn't exist");
         }
+
+        adminService.isUserAdmin(taskId);
 
         if (taskRepository.isUserAdmin(taskId, userId).get() > 0) {
             taskRepository.removeAdmin(userId);
@@ -122,12 +126,19 @@ public class TaskService {
 
     @Transactional
     public void shareTask(Long taskId, String userEmail) {
+        if (!taskRepository.existsById(taskId)) {
+            throw new ResourceNotFoundException("Resource not found");
+        }
+
         adminService.isUserAdmin(taskId);
 
         Long userId = userRepository.getUserIdByEmail(userEmail);
-
         if (userId == null) {
             throw new ResourceNotFoundException("The user you want to share the task doesn't exist");
+        }
+
+        if (taskRepository.validateTaskUser(taskId, userId).get() > 0) {
+            throw new DatabaseException("User already exists in the task");
         }
 
         taskRepository.shareTask(userId, taskId);

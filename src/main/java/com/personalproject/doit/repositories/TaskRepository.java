@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -55,18 +56,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "WHERE task_id = :taskId")
     void removeAllUsersFromTask(Long taskId);
 
-    @Modifying
-    @Query(nativeQuery = true, value = "DELETE FROM tb_task_categories " +
-            "WHERE task_id = :taskId")
-    void removeAssociatedCategories(Long taskId);
 
     @Modifying
     @Query(nativeQuery = true, value = "DELETE FROM tb_task_admins " +
             "WHERE user_id = :userId")
     void removeAdmin(Long userId);
 
-    @Modifying
-    @Query(nativeQuery = true, value = "DELETE FROM tb_task_admins " +
-            "WHERE task_id = :taskId")
-    void removeAssociatedAdmins(Long taskId);
 }

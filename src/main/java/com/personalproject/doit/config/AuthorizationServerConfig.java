@@ -59,8 +59,13 @@ public class AuthorizationServerConfig {
 	@Value("${security.jwt.duration}")
 	private Integer jwtDurationSeconds;
 
-	@Autowired
+
 	private UserDetailsService userDetailsService;
+
+	@Autowired
+	public AuthorizationServerConfig(UserDetailsService userDetailsService) {
+		this.userDetailsService = userDetailsService;
+	}
 
 	@Bean
 	@Order(2)

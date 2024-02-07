@@ -1,6 +1,7 @@
 package com.personalproject.doit.services;
 
 import com.personalproject.doit.dtos.UserMinDTO;
+import com.personalproject.doit.entities.User;
 import com.personalproject.doit.exceptions.ForbiddenException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.repositories.TaskRepository;
@@ -27,8 +28,6 @@ public class AdminService {
 
     @Transactional
     public void addAdmin(Long id, Long userId) {
-        isUserAdmin(id);
-
         if (!taskRepository.existsById(id)) {
             throw new ResourceNotFoundException("Task not found");
         }
@@ -37,12 +36,14 @@ public class AdminService {
             throw new ResourceNotFoundException("User not found");
         }
 
+        isUserAdmin(id);
+
         taskRepository.addAdmin(id, userId);
     }
 
    @Transactional(readOnly = true)
    public void isUserAdmin(Long taskId) {
-        UserMinDTO me = userService.getMe();
+        User me = userService.authenticated();
 
         Optional<Integer> result = taskRepository.isUserAdmin(taskId, me.getId());
 
