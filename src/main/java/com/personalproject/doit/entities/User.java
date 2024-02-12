@@ -20,6 +20,8 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
     private String phone;
+
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private LocalDate birthDate;
     private String password;
 
@@ -152,6 +154,10 @@ public class User implements UserDetails {
 
     public Set<Task> getTasks() {
         return tasks;
+    }
+
+    public void addTask(Task task) {
+        tasks.add(task);
     }
 
     @Override

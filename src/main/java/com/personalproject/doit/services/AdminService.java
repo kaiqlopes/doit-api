@@ -52,4 +52,18 @@ public class AdminService {
         }
     }
 
+    @Transactional
+    public void removeAdmin(Long id, Long adminId) {
+        if (!taskRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Task doesn't exist");
+        }
+
+        if (!userRepository.existsById(adminId)) {
+            throw new ResourceNotFoundException("User doesn't exist");
+        }
+
+        isUserAdmin(id);
+
+        taskRepository.removeAdmin(adminId);
+    }
 }

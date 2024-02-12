@@ -1,16 +1,25 @@
 package com.personalproject.doit.dtos;
 
 import com.personalproject.doit.entities.User;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
 public class UserDTO {
 
     private Long id;
+
+    @NotBlank(message = "Obligatory field")
     private String name;
+
+    @NotBlank(message = "Obligatory field")
     private String email;
     private String phone;
     private LocalDate birthDate;
+
+    @NotBlank(message = "Obligatory field")
+    @Size(min = 6, message = "Password must have at least 6 characters")
     private String password;
 
     public UserDTO(Long id, String name, String email, String phone, LocalDate birthDate, String password) {

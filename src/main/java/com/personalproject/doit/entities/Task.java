@@ -115,6 +115,10 @@ public class Task {
         return users;
     }
 
+    public void addUser(User user) {
+        users.add(user);
+    }
+
     public void setTaskStatus(ToDoStatus taskStatus) {
         this.taskStatus = taskStatus;
     }

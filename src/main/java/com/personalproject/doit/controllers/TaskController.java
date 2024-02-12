@@ -3,6 +3,7 @@ package com.personalproject.doit.controllers;
 import com.personalproject.doit.dtos.TaskDTO;
 import com.personalproject.doit.services.AdminService;
 import com.personalproject.doit.services.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,7 @@ public class TaskController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
-    @PostMapping(value = "{id}/{userId}/addAdmin")
+    @PostMapping(value = "{id}/admins/{userId}")
     public ResponseEntity<String> addAdmin(@PathVariable Long id, @PathVariable Long userId) {
         adminService.addAdmin(id, userId);
         return ResponseEntity.ok("Admin added");
@@ -52,7 +53,7 @@ public class TaskController {
 
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<TaskDTO> insert(@RequestBody TaskDTO dto) {
+    public ResponseEntity<TaskDTO> insert(@Valid @RequestBody TaskDTO dto) {
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -74,17 +75,22 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
+    @DeleteMapping(value = "/{id}/admins/{adminId}")
+    public ResponseEntity<Void> removeAdminFromTask(@PathVariable Long id, @PathVariable Long adminId) {
+        adminService.removeAdmin(id, adminId);
+        return ResponseEntity.noContent().build();
+    }
 
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
-    @DeleteMapping(value = "/{id}/{userId}")
+    @DeleteMapping(value = "/{id}/users/{userId}")
     public ResponseEntity<String> removeUserFromTask(@PathVariable Long id, @PathVariable Long userId) {
         service.removeUserFromTask(id, userId);
         return ResponseEntity.ok("User removed successfully");
     }
 
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
-    @PostMapping(value = "/{id}")
+    @PostMapping(value = "/{id}/users")
     public ResponseEntity<String> shareTask(@PathVariable Long id, @RequestParam(name = "email", defaultValue = "") String userEmail) {
         service.shareTask(id, userEmail);
         return ResponseEntity.ok("Task successfully shared");

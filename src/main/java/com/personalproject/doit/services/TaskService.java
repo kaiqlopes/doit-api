@@ -3,21 +3,17 @@ package com.personalproject.doit.services;
 import com.personalproject.doit.config.AuthorizationServerConfig;
 import com.personalproject.doit.dtos.CategoryDTO;
 import com.personalproject.doit.dtos.TaskDTO;
-import com.personalproject.doit.dtos.UserMinDTO;
 import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.entities.User;
 import com.personalproject.doit.exceptions.DatabaseException;
-import com.personalproject.doit.exceptions.ForbiddenException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.repositories.CategoryRepository;
 import com.personalproject.doit.repositories.TaskRepository;
 import com.personalproject.doit.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -68,11 +64,13 @@ public class TaskService {
 
     @Transactional
     public TaskDTO insert(TaskDTO dto) {
-        User me = userService.authenticated();
-
         Task entity = new Task();
         copyDtoToEntity(dto, entity);
+
         entity = taskRepository.save(entity);
+
+        User me = userService.authenticated();
+        me.addTask(entity);
 
         taskRepository.addAdmin(entity.getId(), me.getId());
 

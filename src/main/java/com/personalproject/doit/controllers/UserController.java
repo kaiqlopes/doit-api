@@ -3,6 +3,7 @@ package com.personalproject.doit.controllers;
 import com.personalproject.doit.dtos.UserDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
 import com.personalproject.doit.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,7 +50,7 @@ public class UserController {
 
     @PostMapping
     @RequestMapping(value = "/register")
-    public ResponseEntity<UserMinDTO> insert(@RequestBody UserDTO dto) {
+    public ResponseEntity<UserMinDTO> insert(@Valid @RequestBody UserDTO dto) {
         UserMinDTO minDto = userService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(minDto.getId()).toUri();

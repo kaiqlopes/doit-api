@@ -9,6 +9,8 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.enums.ToDoStatus;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,13 +19,17 @@ import java.util.List;
 public class TaskDTO {
 
     private Long id;
+
+    @NotBlank(message = "Obligatory field")
     private String title;
     private String description;
 
+    @Past(message = "Must be a future date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime startDate;
+
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
