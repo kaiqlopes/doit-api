@@ -57,8 +57,6 @@ Do It is a To Do List app which has the focus on helping users to be more organi
 <b>3.</b> Use your favorite API REST testing tool
 
 
-## Endpoints:
-
 ## Author
 <b>_Kaique Lopes da Silva_</b> <br>
 <div align="left" style="display: inline-block;">
