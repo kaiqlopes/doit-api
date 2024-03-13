@@ -20,7 +20,6 @@ INSERT INTO tb_task (title, description, start_date, finish_date, priority, task
 INSERT INTO tb_task (title, description, start_date, finish_date, priority, task_status) VALUES ('Prova de Engenharia de Software', null, '2023-01-16 19:30:00', '2023-11-30 21:30:00', 2, 'TO_DO');
 
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 1);
-INSERT INTO tb_user_task (user_id, task_id) VALUES (2, 1);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 2);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 3);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 5);
@@ -29,6 +28,7 @@ INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 8);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 9);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 10);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 13);
+INSERT INTO tb_user_task (user_id, task_id) VALUES (2, 1);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (2, 5);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (2, 6);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (2, 7);

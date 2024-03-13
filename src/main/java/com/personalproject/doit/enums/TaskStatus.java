@@ -1,6 +1,6 @@
 package com.personalproject.doit.enums;
 
-public enum ToDoStatus {
+public enum TaskStatus {
 
     TO_DO, IN_PROGRESS, DONE;
 

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -115,8 +116,8 @@ public class TaskService {
 
         adminService.isUserAdmin(taskId);
 
-        if (taskRepository.isUserAdmin(taskId, userId).get() > 0) {
-            taskRepository.removeAdmin(userId);
+        if (taskRepository.isUserAdmin(taskId, userId) > 0) {
+            taskRepository.removeAdmin(taskId, userId);
         }
 
         taskRepository.removeUserFromTask(taskId, userId);
@@ -130,12 +131,14 @@ public class TaskService {
 
         adminService.isUserAdmin(taskId);
 
-        Long userId = userRepository.getUserIdByEmail(userEmail);
-        if (userId == null) {
+        Optional<Long> result = userRepository.getUserIdByEmail(userEmail);
+        if (result.isEmpty()) {
             throw new ResourceNotFoundException("The user you want to share the task doesn't exist");
         }
 
-        if (taskRepository.validateTaskUser(taskId, userId).get() > 0) {
+        Long userId = result.get();
+
+        if (taskRepository.validateTaskUser(taskId, userId) > 0) {
             throw new DatabaseException("User already exists in the task");
         }
 

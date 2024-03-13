@@ -1,6 +1,6 @@
 package com.personalproject.doit.entities;
 
-import com.personalproject.doit.enums.ToDoStatus;
+import com.personalproject.doit.enums.TaskStatus;
 import jakarta.persistence.*;
 
 
@@ -23,7 +23,7 @@ public class Task {
     private Integer priority;
 
     @Enumerated(EnumType.STRING)
-    private ToDoStatus taskStatus;
+    private TaskStatus taskStatus;
 
     @ManyToMany(mappedBy = "tasks")
     private Set<User> users = new HashSet<>();
@@ -47,17 +47,6 @@ public class Task {
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.priority = priority;
-    }
-
-    public Task(Long id, String title, String description, LocalDateTime startDate, LocalDateTime finishDate, Integer priority, ToDoStatus taskStatus, Set<Category> categories) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.startDate = startDate;
-        this.finishDate = finishDate;
-        this.priority = priority;
-        this.taskStatus = taskStatus;
-        this.categories = categories;
     }
 
     public Task() {
@@ -119,11 +108,11 @@ public class Task {
         users.add(user);
     }
 
-    public void setTaskStatus(ToDoStatus taskStatus) {
+    public void setTaskStatus(TaskStatus taskStatus) {
         this.taskStatus = taskStatus;
     }
 
-    public ToDoStatus getTaskStatus() {
+    public TaskStatus getTaskStatus() {
         return taskStatus;
     }
 

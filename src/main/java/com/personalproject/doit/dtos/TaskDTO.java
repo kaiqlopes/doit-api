@@ -8,7 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Task;
-import com.personalproject.doit.enums.ToDoStatus;
+import com.personalproject.doit.enums.TaskStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 
@@ -36,11 +36,11 @@ public class TaskDTO {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime finishDate;
     private Integer priority;
-    private ToDoStatus taskStatus;
+    private TaskStatus taskStatus;
 
     List<CategoryDTO> categories = new ArrayList<>();
 
-    public TaskDTO(Long id, String title, String description, LocalDateTime startDate, LocalDateTime finishDate, Integer priority, ToDoStatus taskStatus) {
+    public TaskDTO(Long id, String title, String description, LocalDateTime startDate, LocalDateTime finishDate, Integer priority, TaskStatus taskStatus) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -112,11 +112,11 @@ public class TaskDTO {
         this.priority = priority;
     }
 
-    public ToDoStatus getTaskStatus() {
+    public TaskStatus getTaskStatus() {
         return taskStatus;
     }
 
-    public void setTaskStatus(ToDoStatus taskStatus) {
+    public void setTaskStatus(TaskStatus taskStatus) {
         this.taskStatus = taskStatus;
     }
 

@@ -1,7 +1,6 @@
 package com.personalproject.doit.repositories;
 
 import com.personalproject.doit.entities.Task;
-import com.personalproject.doit.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,9 +8,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
-import java.util.Set;
+
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
@@ -29,11 +28,11 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query(nativeQuery = true, value = "SELECT count(*) FROM tb_task_admins " +
             "WHERE user_id = :userId AND task_id = :taskId")
-    Optional<Integer> isUserAdmin(Long taskId, Long userId);
+    Integer isUserAdmin(Long taskId, Long userId);
 
     @Query(nativeQuery = true, value = "SELECT count(*) FROM tb_user_task " +
             "WHERE task_id = :taskId AND user_id = :userId")
-    Optional<Integer> validateTaskUser(Long taskId, Long userId);
+    Integer validateTaskUser(Long taskId, Long userId);
 
     @Query(nativeQuery = true, value = "SELECT task_id " +
             "FROM tb_user_task " +
@@ -56,10 +55,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "WHERE task_id = :taskId")
     void removeAllUsersFromTask(Long taskId);
 
-
     @Modifying
     @Query(nativeQuery = true, value = "DELETE FROM tb_task_admins " +
-            "WHERE user_id = :userId")
-    void removeAdmin(Long userId);
-
+            "WHERE task_id = :taskId AND user_id = :userId")
+    void removeAdmin(Long taskId, Long userId);
 }

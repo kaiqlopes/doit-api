@@ -45,9 +45,9 @@ public class AdminService {
    public void isUserAdmin(Long taskId) {
         User me = userService.authenticated();
 
-        Optional<Integer> result = taskRepository.isUserAdmin(taskId, me.getId());
+        Integer result = taskRepository.isUserAdmin(taskId, me.getId());
 
-        if (result.get() == 0) {
+        if (result == 0) {
             throw new ForbiddenException("You are not an admin of this task");
         }
     }
@@ -64,6 +64,6 @@ public class AdminService {
 
         isUserAdmin(id);
 
-        taskRepository.removeAdmin(adminId);
+        taskRepository.removeAdmin(id, adminId);
     }
 }
