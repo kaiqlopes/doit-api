@@ -1,7 +1,7 @@
 package com.personalproject.doit.repositories;
 
 import com.personalproject.doit.entities.Task;
-import com.personalproject.doit.factories.TaskFactory;
+import com.personalproject.doit.factories.Factory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -141,7 +141,7 @@ public class TaskRepositoryTests {
 
     @Test
     public void saveShouldPersistWithAutoIncrementWhenIdIsNull() {
-        Task task = TaskFactory.createTask();
+        Task task = Factory.createTask();
 
         task = repository.save(task);
         List<Task> result = repository.findAll();

@@ -5,8 +5,6 @@ import com.personalproject.doit.services.AdminService;
 import com.personalproject.doit.services.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -92,7 +90,7 @@ public class TaskController {
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
     @PostMapping(value = "/{id}/users")
     public ResponseEntity<String> shareTask(@PathVariable Long id, @RequestParam(name = "email", defaultValue = "") String userEmail) {
-        service.shareTask(id, userEmail);
+        service.addTaskUser(id, userEmail);
         return ResponseEntity.ok("Task successfully shared");
     }
 }

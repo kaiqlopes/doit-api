@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import java.util.Optional;
-
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
@@ -18,7 +16,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Modifying
     @Query(nativeQuery = true, value = "INSERT INTO tb_task_admins(task_id, user_id) " +
             "VALUES(:taskId, :userId)")
-    void addAdmin(Long taskId, Long userId);
+    void addAdmin(Long userId, Long taskId);
 
     @Query("SELECT DISTINCT obj FROM Task obj " +
             "JOIN FETCH obj.categories " +
@@ -48,7 +46,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Modifying
     @Query(nativeQuery = true, value = "INSERT INTO tb_user_task " +
             "(user_id, task_id) VALUES (:userId, :id)")
-    void shareTask(@Param("userId") Long UserId, @Param("id") Long id);
+    void addTaskUser(@Param("userId") Long UserId, @Param("id") Long id);
 
     @Modifying
     @Query(nativeQuery = true, value = "DELETE FROM tb_user_task " +
