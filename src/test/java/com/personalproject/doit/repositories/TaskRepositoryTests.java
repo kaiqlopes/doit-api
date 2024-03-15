@@ -51,7 +51,7 @@ public class TaskRepositoryTests {
 
     @Test
     public void addAdminShouldAddUserAsAdmin() {
-        repository.addAdmin(existingTaskId, existingUserId);
+        repository.addAdmin(existingUserId, existingTaskId);
 
         Integer result = repository.isUserAdmin(existingTaskId, existingUserId);
 

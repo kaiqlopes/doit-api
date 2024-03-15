@@ -16,7 +16,7 @@ public class Factory {
 
     public static Task createTask() {
         Task task = new Task(null, "Fazer o jantar", "Macarrão a bolonhesa com carne moída", LocalDateTime.now(), null, 1);
-        task.getCategories().add(new Category(1L, "Obrigações diárias"));
+        task.getCategories().add(createCategory());
 
         return task;
     }
@@ -34,7 +34,7 @@ public class Factory {
     }
 
     public static UserMinDTO createNotValidUserMinDTO() {
-        UserMinDTO userMinDTO = new UserMinDTO(2L, "Thorzinho", "thorzinho@gmail.com", "1101234588");
+        UserMinDTO userMinDTO = new UserMinDTO(2L, "Not Valid User", "notvalid@gmail.com", "1101234588");
         userMinDTO.getRoles().add("ROLE_OPERATOR");
 
         return userMinDTO;
@@ -42,5 +42,10 @@ public class Factory {
 
     public static User createUser() {
         return new User(1L, "Kaique", "kaique@gmail.com", "40028922", LocalDate.parse("1998-11-20"), "123456");
+    }
+
+    public static Category createCategory() {
+
+        return new Category(1L, "Cuidados pessoais");
     }
 }

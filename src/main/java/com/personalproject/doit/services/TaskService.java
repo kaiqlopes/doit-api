@@ -12,6 +12,7 @@ import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.repositories.CategoryRepository;
 import com.personalproject.doit.repositories.TaskRepository;
 import com.personalproject.doit.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,7 @@ public class TaskService {
 
     @Transactional(readOnly = true)
     public List<TaskDTO> findAll() {
-        User me = userService.authenticated();
+        UserMinDTO me = userService.getMe();
 
         List<Task> result = repository.findAllTasksByUserId(me.getId());
 
@@ -70,25 +71,29 @@ public class TaskService {
     public TaskDTO insert(TaskDTO dto) {
         Task entity = new Task();
         copyDtoToEntity(dto, entity);
-        User user = userService.authenticated();
+        UserMinDTO me = userService.getMe();
 
         entity = repository.save(entity);
 
-        repository.addTaskUser(user.getId(), entity.getId());
-        repository.addAdmin(user.getId(), entity.getId());
+        repository.addTaskUser(me.getId(), entity.getId());
+        repository.addAdmin(me.getId(), entity.getId());
 
         return new TaskDTO(entity);
     }
 
     @Transactional
     public TaskDTO update(Long taskId, TaskDTO dto) {
-        Task entity = repository.getReferenceById(taskId);
+        try {
+            Task entity = repository.getReferenceById(taskId);
+            adminService.isUserAdmin(taskId);
+            copyDtoToEntity(dto, entity);
+            entity = repository.save(entity);
 
-        adminService.isUserAdmin(taskId);
-
-        copyDtoToEntity(dto, entity);
-        entity = repository.save(entity);
-        return new TaskDTO(entity);
+            return new TaskDTO(entity);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Resource not found");
+        }
     }
 
 

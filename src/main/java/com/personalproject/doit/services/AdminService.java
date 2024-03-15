@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 public class AdminService {
 
@@ -43,7 +41,7 @@ public class AdminService {
 
    @Transactional(readOnly = true)
    public void isUserAdmin(Long taskId) {
-        User me = userService.authenticated();
+        UserMinDTO me = userService.getMe();
 
         Integer result = taskRepository.isUserAdmin(taskId, me.getId());
 

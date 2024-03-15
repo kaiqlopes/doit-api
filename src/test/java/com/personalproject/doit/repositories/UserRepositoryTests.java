@@ -53,7 +53,7 @@ public class UserRepositoryTests {
     public void searchUserAndRolesByEmailShouldReturnListWhenValidEmail() {
         List<UserDetailsProjection> result = repository.searchUserAndRolesByEmail(existingUserEmail);
 
-        Assertions.assertTrue(!result.isEmpty());
+        Assertions.assertTrue(result.size() > 0);
     }
 
     @Test

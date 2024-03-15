@@ -25,7 +25,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllTasksByUserId(@Param("userId") Long userId);
 
     @Query(nativeQuery = true, value = "SELECT count(*) FROM tb_task_admins " +
-            "WHERE user_id = :userId AND task_id = :taskId")
+            "WHERE task_id = :taskId AND user_id = :userId")
     Integer isUserAdmin(Long taskId, Long userId);
 
     @Query(nativeQuery = true, value = "SELECT count(*) FROM tb_user_task " +
