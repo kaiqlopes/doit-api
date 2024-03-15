@@ -13,13 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +37,6 @@ public class UserService implements UserDetailsService {
         this.taskRepository = taskRepository;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional(readOnly = true)
     public UserMinDTO findById(Long id) {
         User result = userRepository.findById(id).orElseThrow(
@@ -47,7 +44,6 @@ public class UserService implements UserDetailsService {
         return new UserMinDTO(result);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional(readOnly = true)
     public Page<UserMinDTO> findAll(Pageable pageable) {
         Page<User> result = userRepository.findAll(pageable);
@@ -58,15 +54,12 @@ public class UserService implements UserDetailsService {
     public UserMinDTO insert(UserDTO dto) {
         User user = new User();
 
-
         copyDtoToEntity(dto, user);
         user = userRepository.save(user);
         return new UserMinDTO(user);
     }
 
 
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
     public UserMinDTO update(Long id, UserDTO dto) {
         User user = userRepository.getReferenceById(id);
@@ -75,7 +68,6 @@ public class UserService implements UserDetailsService {
         return new UserMinDTO(user);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
     public void deleteById(Long id) {
         if (!userRepository.existsById(id)) {

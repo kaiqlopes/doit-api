@@ -1,6 +1,7 @@
 package com.personalproject.doit.factories;
 
 import com.personalproject.doit.dtos.TaskDTO;
+import com.personalproject.doit.dtos.UserDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
 import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Role;
@@ -33,15 +34,19 @@ public class Factory {
         return userMinDTO;
     }
 
+    public static User createUser() {
+        return new User(1L, "Kaique", "kaique@gmail.com", "40028922", LocalDate.parse("1998-11-20"), "123456");
+    }
+
+    public static UserDTO createUserDTO() {
+        return new UserDTO(createUser());
+    }
+
     public static UserMinDTO createNotValidUserMinDTO() {
         UserMinDTO userMinDTO = new UserMinDTO(2L, "Not Valid User", "notvalid@gmail.com", "1101234588");
         userMinDTO.getRoles().add("ROLE_OPERATOR");
 
         return userMinDTO;
-    }
-
-    public static User createUser() {
-        return new User(1L, "Kaique", "kaique@gmail.com", "40028922", LocalDate.parse("1998-11-20"), "123456");
     }
 
     public static Category createCategory() {

@@ -233,7 +233,7 @@ public class TaskServiceTests {
     }
 
     @Test
-    public void removeUserShouldDoNothingWhenValidData() {
+    public void removeUserFromTaskShouldDoNothingWhenValidData() {
         Assertions.assertDoesNotThrow(() -> {
             service.removeUserFromTask(existingId, existingId);
         });
