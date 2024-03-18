@@ -7,9 +7,11 @@ import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Role;
 import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.entities.User;
+import com.personalproject.doit.projections.UserDetailsProjection;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,16 +28,16 @@ public class Factory {
         return new TaskDTO(createTask());
     }
 
+    public static User createUser() {
+        return new User(1L, "Kaique", "kaique@gmail.com", "40028922", LocalDate.parse("1998-11-20"), "123456");
+    }
+
     public static UserMinDTO createValidUserMinDTO() {
         UserMinDTO userMinDTO = new UserMinDTO(1L, "Kaique", "kaique@gmail.com", "1101234567");
         userMinDTO.getRoles().add("ROLE_ADMIN");
         userMinDTO.getRoles().add("ROLE_OPERATOR");
 
         return userMinDTO;
-    }
-
-    public static User createUser() {
-        return new User(1L, "Kaique", "kaique@gmail.com", "40028922", LocalDate.parse("1998-11-20"), "123456");
     }
 
     public static UserDTO createUserDTO() {
@@ -52,5 +54,11 @@ public class Factory {
     public static Category createCategory() {
 
         return new Category(1L, "Cuidados pessoais");
+    }
+
+    public static UserDetailsProjectionImpl createUserDetails() {
+        UserDetailsProjectionImpl userDetailsProjection =  new UserDetailsProjectionImpl("kaique@gmail.com", "1234567", 1L, "ROLE_ADMIN");
+
+        return userDetailsProjection;
     }
 }

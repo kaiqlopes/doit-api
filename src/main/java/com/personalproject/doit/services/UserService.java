@@ -9,6 +9,7 @@ import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.projections.UserDetailsProjection;
 import com.personalproject.doit.repositories.TaskRepository;
 import com.personalproject.doit.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -62,10 +63,16 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public UserMinDTO update(Long id, UserDTO dto) {
-        User user = userRepository.getReferenceById(id);
-        copyDtoToEntity(dto, user);
-        user = userRepository.save(user);
-        return new UserMinDTO(user);
+        try {
+            User user = userRepository.getReferenceById(id);
+            copyDtoToEntity(dto, user);
+            user = userRepository.save(user);
+            return new UserMinDTO(user);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Resource not found");
+        }
+
     }
 
     @Transactional
