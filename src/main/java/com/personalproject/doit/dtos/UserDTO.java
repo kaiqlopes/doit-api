@@ -37,6 +37,7 @@ public class UserDTO {
         email = user.getEmail();
         phone = user.getPhone();
         birthDate = user.getBirthDate();
+        password = user.getPassword();
     }
 
     public Long getId() {

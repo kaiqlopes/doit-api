@@ -29,7 +29,19 @@ public class Factory {
     }
 
     public static User createUser() {
-        return new User(1L, "Kaique", "kaique@gmail.com", "40028922", LocalDate.parse("1998-11-20"), "123456");
+        return new User(1L, "Kaique", "kaique@gmail.com", "40028922", LocalDate.parse("1998-11-20"), "1234567");
+    }
+
+    public static User createUserWithNullId() {
+        return new User(null, "Kaique", "kaique@gmail.com", "40028922", LocalDate.parse("1998-11-20"), "1234567");
+    }
+
+    public static UserDTO createUserDTO() {
+        return new UserDTO(createUser());
+    }
+
+    public static UserDTO createUserDTOWithNullId() {
+        return new UserDTO(createUserWithNullId());
     }
 
     public static UserMinDTO createValidUserMinDTO() {
@@ -38,10 +50,6 @@ public class Factory {
         userMinDTO.getRoles().add("ROLE_OPERATOR");
 
         return userMinDTO;
-    }
-
-    public static UserDTO createUserDTO() {
-        return new UserDTO(createUser());
     }
 
     public static UserMinDTO createNotValidUserMinDTO() {
