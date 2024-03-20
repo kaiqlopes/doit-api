@@ -39,14 +39,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UserController.class)
 public class UserControllerTests {
 
-    @Autowired
     private MockMvc mockMvc;
+    private ObjectMapper objectMapper;
 
     @MockBean
     private UserService service;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private Long existingId;
     private Long nonExistingId;
@@ -55,6 +52,11 @@ public class UserControllerTests {
     private UserMinDTO userMinDTO;
     private PageImpl<UserMinDTO> page;
 
+    @Autowired
+    public UserControllerTests(MockMvc mockMvc, ObjectMapper objectMapper) {
+        this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
+    }
 
     @BeforeEach
     void setUp() throws Exception {
@@ -133,10 +135,11 @@ public class UserControllerTests {
         String jsonBody = objectMapper.writeValueAsString(userDTO);
 
         mockMvc.perform(post("/users/register")
-                .content(jsonBody)
-                .with(csrf())
-                .with(user("kaiq"))
-                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                    .content(jsonBody)
+                    .with(csrf())
+                    .with(user("kaiq"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())

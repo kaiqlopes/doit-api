@@ -27,10 +27,10 @@ public class TaskController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
-    @PostMapping(value = "{id}/admins/{userId}")
-    public ResponseEntity<String> addAdmin(@PathVariable Long id, @PathVariable Long userId) {
+    @PostMapping(value = "/{id}/admins/{userId}")
+    public ResponseEntity<Void> addAdmin(@PathVariable Long id, @PathVariable Long userId) {
         adminService.addAdmin(id, userId);
-        return ResponseEntity.ok("Admin added");
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")

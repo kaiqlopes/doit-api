@@ -4,21 +4,22 @@ import com.personalproject.doit.dtos.TaskDTO;
 import com.personalproject.doit.dtos.UserDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
 import com.personalproject.doit.entities.Category;
-import com.personalproject.doit.entities.Role;
 import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.entities.User;
-import com.personalproject.doit.projections.UserDetailsProjection;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Factory {
 
     public static Task createTask() {
-        Task task = new Task(null, "Fazer o jantar", "Macarrão a bolonhesa com carne moída", LocalDateTime.now(), null, 1);
+        Task task = new Task(null, "Fazer o jantar", "Macarrão a bolonhesa com carne moída", null, null, 1);
+        task.getCategories().add(createCategory());
+
+        return task;
+    }
+
+    public static Task createTaskWithId() {
+        Task task = new Task(1L, "Fazer o jantar", "Macarrão a bolonhesa com carne moída", null, null, 1);
         task.getCategories().add(createCategory());
 
         return task;
@@ -27,6 +28,10 @@ public class Factory {
     public static TaskDTO createTaskDTO() {
         return new TaskDTO(createTask());
     }
+    public static TaskDTO createTaskDTOWithId() {
+        return new TaskDTO(createTaskWithId());
+    }
+
 
     public static User createUser() {
         return new User(1L, "Kaique", "kaique@gmail.com", "40028922", LocalDate.parse("1998-11-20"), "1234567");
