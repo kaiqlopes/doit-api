@@ -82,9 +82,9 @@ public class TaskController {
 
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}/users/{userId}")
-    public ResponseEntity<String> removeUserFromTask(@PathVariable Long id, @PathVariable Long userId) {
+    public ResponseEntity<Void> removeUserFromTask(@PathVariable Long id, @PathVariable Long userId) {
         service.removeUserFromTask(id, userId);
-        return ResponseEntity.ok("User removed successfully");
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")

@@ -32,6 +32,11 @@ public class Factory {
         return new TaskDTO(createTaskWithId());
     }
 
+    public static TaskDTO createInvalidTaskDTO() {
+        Task task = new Task(null, null, "Macarrão a bolonhesa com carne moída", null, null, 1);
+        return new TaskDTO(task);
+    }
+
 
     public static User createUser() {
         return new User(1L, "Kaique", "kaique@gmail.com", "40028922", LocalDate.parse("1998-11-20"), "1234567");
