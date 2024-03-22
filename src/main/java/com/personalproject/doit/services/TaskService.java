@@ -122,10 +122,7 @@ public class TaskService {
 
         adminService.isUserAdmin(taskId);
 
-        if (repository.isUserAdmin(taskId, userId) > 0) {
-            repository.removeAdmin(taskId, userId);
-        }
-
+        repository.removeAdmin(taskId, userId);
         repository.removeUserFromTask(taskId, userId);
     }
 

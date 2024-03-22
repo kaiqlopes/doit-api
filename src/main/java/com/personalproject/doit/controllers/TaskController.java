@@ -89,8 +89,8 @@ public class TaskController {
 
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
     @PostMapping(value = "/{id}/users")
-    public ResponseEntity<String> shareTask(@PathVariable Long id, @RequestParam(name = "email", defaultValue = "") String userEmail) {
+    public ResponseEntity<Void> shareTask(@PathVariable Long id, @RequestParam(name = "email", defaultValue = "") String userEmail) {
         service.addTaskUser(id, userEmail);
-        return ResponseEntity.ok("Task successfully shared");
+        return ResponseEntity.noContent().build();
     }
 }

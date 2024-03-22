@@ -177,6 +177,15 @@ public class TaskServiceTests {
     }
 
     @Test
+    public void updateShouldThrowForbiddenExceptionWhenUserIsNotAnAdmin() {
+        doThrow(ForbiddenException.class).when(adminService).isUserAdmin(anyLong());
+
+        Assertions.assertThrowsExactly(ForbiddenException.class, () -> {
+            service.update(existingId, taskDTO);
+        });
+    }
+
+    @Test
     public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
         Assertions.assertThrowsExactly(ResourceNotFoundException.class, () -> {
             service.deleteById(nonExistingId);

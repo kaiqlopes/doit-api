@@ -3,6 +3,7 @@ package com.personalproject.doit.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.personalproject.doit.dtos.TaskDTO;
 import com.personalproject.doit.exceptions.DatabaseException;
+import com.personalproject.doit.exceptions.ForbiddenException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.factories.Factory;
 import com.personalproject.doit.services.AdminService;
@@ -19,8 +20,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -43,8 +42,10 @@ public class TaskControllerTests {
     private Long existingId;
     private Long nonExistingId;
     private Long dependentId;
-
     private TaskDTO taskDTO;
+    private String existingEmail;
+    private String nonExistingEmail;
+
 
     @Autowired
     public TaskControllerTests(MockMvc mockMvc, ObjectMapper objectMapper) {
@@ -58,6 +59,8 @@ public class TaskControllerTests {
         nonExistingId = 100L;
         dependentId = 2L;
         taskDTO = Factory.createTaskDTOWithId();
+        existingEmail = "existingemail@gmail.com";
+        nonExistingEmail = "nonexistingemail@gmail.com";
 
         doNothing().when(adminService).addAdmin(existingId, existingId);
         doThrow(ResourceNotFoundException.class).when(adminService).addAdmin(existingId, nonExistingId);
@@ -88,6 +91,10 @@ public class TaskControllerTests {
         doThrow(ResourceNotFoundException.class).when(service).removeUserFromTask(eq(nonExistingId), anyLong());
         doThrow(ResourceNotFoundException.class).when(service).removeUserFromTask(anyLong(), eq(nonExistingId));
         doThrow(ResourceNotFoundException.class).when(service).removeUserFromTask(nonExistingId, nonExistingId);
+
+        doNothing().when(service).addTaskUser(existingId, existingEmail);
+        doThrow(ResourceNotFoundException.class).when(service).addTaskUser(eq(nonExistingId), any());
+        doThrow(ResourceNotFoundException.class).when(service).addTaskUser(anyLong(), eq(nonExistingEmail));
     }
 
     @Test
@@ -95,9 +102,9 @@ public class TaskControllerTests {
     public void addAdminShouldReturnIsNoContentWhenValidIds() throws Exception {
 
         mockMvc.perform(post("/tasks/{id}/admins/{userId}", existingId, existingId)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .with(csrf())
-                    .with(user("kaiq")))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .with(user("kaiq")))
 
                 .andExpect(status().isNoContent());
     }
@@ -118,9 +125,9 @@ public class TaskControllerTests {
     @WithMockUser(username = "kaique@gmail.com", password = "123456")
     public void findAllShouldReturnListAndOk() throws Exception {
         ResultActions result = mockMvc.perform(get("/tasks")
-                .accept(MediaType.APPLICATION_JSON)
-                .with(csrf())
-                .with(user("kaiq")))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .with(user("kaiq")))
 
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L));
@@ -130,8 +137,8 @@ public class TaskControllerTests {
     @WithMockUser(username = "kaique@gmail.com", password = "123456")
     public void findByIdShouldReturnUserDTOAndOk() throws Exception {
         mockMvc.perform(get("/tasks/{id}", existingId)
-                .with(csrf())
-                .with(user("kaiq")))
+                        .with(csrf())
+                        .with(user("kaiq")))
 
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(taskDTO)))
@@ -152,11 +159,11 @@ public class TaskControllerTests {
         String jsonBody = objectMapper.writeValueAsString(taskDTO);
 
         mockMvc.perform(post("/tasks")
-                .content(jsonBody)
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf())
-                .with(user("kaiq"))
-                .accept(MediaType.APPLICATION_JSON))
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .with(user("kaiq"))
+                        .accept(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L));
@@ -182,11 +189,11 @@ public class TaskControllerTests {
         String jsonBody = objectMapper.writeValueAsString(taskDTO);
 
         mockMvc.perform(put("/tasks/{id}", existingId)
-                .content(jsonBody)
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf())
-                .with(user("kaiq"))
-                .accept(MediaType.APPLICATION_JSON))
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .with(user("kaiq"))
+                        .accept(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isOk())
                 .andExpect(content().json(jsonBody))
@@ -198,20 +205,35 @@ public class TaskControllerTests {
         String jsonBody = objectMapper.writeValueAsString(taskDTO);
 
         mockMvc.perform(put("/tasks/{id}", nonExistingId)
-                .content(jsonBody)
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf())
-                .with(user("kaiq")))
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .with(user("kaiq")))
 
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    public void updateShouldReturnForbiddenWhenUserIsNotAnAdmin() throws Exception {
+        when(service.update(anyLong(), any())).thenThrow(ForbiddenException.class);
+
+        String jsonBody = objectMapper.writeValueAsString(taskDTO);
+
+        mockMvc.perform(put("/tasks/{id}", existingId)
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .with(user("kaiq")))
+
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void deleteShouldReturnNoContentWhenIdExists() throws Exception {
         mockMvc.perform(delete("/tasks/{id}", existingId)
-                .with(csrf())
-                .with(user("kaiq"))
-                .accept(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .with(user("kaiq"))
+                        .accept(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isNoContent());
     }
@@ -225,6 +247,7 @@ public class TaskControllerTests {
 
                 .andExpect(status().isNotFound());
     }
+
     @Test
     public void deleteShouldReturnBadRequestWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(delete("/tasks/{id}", dependentId)
@@ -236,17 +259,29 @@ public class TaskControllerTests {
     }
 
     @Test
-    public void removeAdminFromTaskShouldReturnNoContentWhenIdExists() throws Exception{
+    public void removeAdminFromTaskShouldReturnNoContentWhenIdExists() throws Exception {
         mockMvc.perform(delete("/tasks/{id}/admins/{adminId}", existingId, existingId)
-                .with(csrf())
-                .with(user("kaiq"))
-                .accept(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .with(user("kaiq"))
+                        .accept(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    public void removeAdminFromTaskShouldReturnNotFoundWhenIdDoesNotExist() throws Exception{
+    public void removeAdminFromTaskShouldReturnForbiddenWhenUserIsNotAnAdmin() throws Exception {
+        doThrow(ForbiddenException.class).when(adminService).removeAdmin(anyLong(), anyLong());
+
+        mockMvc.perform(delete("/tasks/{id}/admins/{adminId}", existingId, existingId)
+                        .with(csrf())
+                        .with(user("kaiq"))
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void removeAdminFromTaskShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(delete("/tasks/{id}/admins/{adminId}", nonExistingId, existingId)
                         .with(csrf())
                         .with(user("kaiq"))
@@ -256,7 +291,7 @@ public class TaskControllerTests {
     }
 
     @Test
-    public void removeUserFromTaskShouldReturnNoContentWhenIdExists() throws Exception{
+    public void removeUserFromTaskShouldReturnNoContentValidIds() throws Exception {
         mockMvc.perform(delete("/tasks/{id}/users/{userId}", existingId, existingId)
                         .with(csrf())
                         .with(user("kaiq"))
@@ -266,7 +301,7 @@ public class TaskControllerTests {
     }
 
     @Test
-    public void removeUserFromTaskShouldReturnIsNotFoundWhenIdDoesNotExist() throws Exception{
+    public void removeUserFromTaskShouldReturnIsNotFoundWhenInvalidIds() throws Exception {
         mockMvc.perform(delete("/tasks/{id}/users/{userId}", nonExistingId, existingId)
                         .with(csrf())
                         .with(user("kaiq"))
@@ -275,4 +310,47 @@ public class TaskControllerTests {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    public void removeUserFromTaskShouldReturnForbiddenWhenUserIsNotAnAdmin() throws Exception {
+        doThrow(ForbiddenException.class).when(service).removeUserFromTask(anyLong(), anyLong());
+
+        mockMvc.perform(delete("/tasks/{id}/users/{userId}", existingId, existingId)
+                        .with(csrf())
+                        .with(user("kaiq"))
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void shareTaskShouldReturnNoContentWhenValidData() throws Exception {
+        mockMvc.perform(post("/tasks/{id}/users", existingId)
+                        .with(csrf())
+                        .with(user("kaiq"))
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void shareTaskShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+        mockMvc.perform(post("/tasks/{id}/users", nonExistingId)
+                        .param("email", existingEmail)
+                        .with(csrf())
+                        .with(user("kaiq"))
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shareTaskShouldReturnNotFoundWhenEmailDoesNotExist() throws Exception {
+        mockMvc.perform(post("/tasks/{id}/users", existingId)
+                        .param("email", nonExistingEmail)
+                        .with(csrf())
+                        .with(user("kaiq"))
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNotFound());
+    }
 }
