@@ -47,8 +47,6 @@ public class TaskController {
         return ResponseEntity.ok(dto);
     }
 
-
-
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<TaskDTO> insert(@Valid @RequestBody TaskDTO dto) {
@@ -57,7 +55,6 @@ public class TaskController {
                 .buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
-
 
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
     @PutMapping(value = "/{id}")

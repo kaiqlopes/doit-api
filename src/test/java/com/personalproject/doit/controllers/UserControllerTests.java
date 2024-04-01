@@ -10,33 +10,25 @@ import com.personalproject.doit.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithSecurityContext;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(value = UserController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 public class UserControllerTests {
 
     private MockMvc mockMvc;
@@ -84,7 +76,6 @@ public class UserControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "kaique@gmail.com", password = "123456")
     public void getMeShouldReturnUserMinDTO() throws Exception {
         mockMvc.perform(get("/users/me")
                         .accept(MediaType.APPLICATION_JSON))
@@ -98,7 +89,6 @@ public class UserControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "kaique@gmail.com", password = "123456")
     public void findAllShouldReturnPage() throws Exception {
         mockMvc.perform(get("/users")
                         .accept(MediaType.APPLICATION_JSON))
@@ -108,7 +98,6 @@ public class UserControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "kaique@gmail.com", password = "123456")
     public void findByIdShouldReturnUserMinDTOWhenIdExists() throws Exception {
         mockMvc.perform(get("/users/{id}", existingId)
                         .accept(MediaType.APPLICATION_JSON))
@@ -122,10 +111,9 @@ public class UserControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "kaique@gmail.com", password = "123456")
     public void findByIdShouldReturnReturnNotFoundWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/users/{id}", nonExistingId)
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isNotFound());
     }
@@ -135,10 +123,8 @@ public class UserControllerTests {
         String jsonBody = objectMapper.writeValueAsString(userDTO);
 
         mockMvc.perform(post("/users/register")
-                    .content(jsonBody)
-                    .with(csrf())
-                    .with(user("kaiq"))
-                    .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isCreated())
@@ -148,16 +134,13 @@ public class UserControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "kaique@gmail.com", password = "123456")
     public void updateShouldReturnUserMinDTOAndOkWhenIdDoesExists() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(userDTO);
 
         mockMvc.perform(post("/users/{id}", existingId)
-                .content(jsonBody)
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf())
-                .with(user("kaiq"))
-                .accept(MediaType.APPLICATION_JSON))
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
@@ -166,49 +149,37 @@ public class UserControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "kaique@gmail.com", password = "123456")
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(userDTO);
 
         mockMvc.perform(put("/users/{id}", nonExistingId)
-                .content(jsonBody)
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf())
-                .with(user("kaiq"))
-                .accept(MediaType.APPLICATION_JSON))
-
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @WithMockUser(username = "kaique@gmail.com", password = "123456")
-    public void deleteShouldReturnNoContentWhenIdExists() throws Exception {
-        mockMvc.perform(delete("/users/{id}", existingId)
-                .with(csrf())
-                .with(user("kaiq"))
-                .accept(MediaType.APPLICATION_JSON))
-
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    @WithMockUser(username = "kaique@gmail.com", password = "123456")
-    public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
-        mockMvc.perform(delete("/users/{id}", nonExistingId)
-                        .with(csrf())
-                        .with(user("kaiq"))
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(username = "kaique@gmail.com", password = "123456")
+    public void deleteShouldReturnNoContentWhenIdExists() throws Exception {
+        mockMvc.perform(delete("/users/{id}", existingId)
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+        mockMvc.perform(delete("/users/{id}", nonExistingId)
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void deleteShouldReturnBadRequestWhenDependentId() throws Exception {
         mockMvc.perform(delete("/users/{id}", dependentId)
-                .with(csrf())
-                .with(user("kaiq"))
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isBadRequest());
     }
