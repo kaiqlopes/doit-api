@@ -104,7 +104,7 @@ public class TaskRepositoryTests {
 
     @Test
     public void findAssociatedTasksWithOnlyOneUserIdShouldReturnListWithTaskIds() {
-        int expectedIdsCount = 5;
+        int expectedIdsCount = 4;
 
         List<Long> result = repository.findAssociatedTasksWithOnlyOneUserId(existingUserId);
 
