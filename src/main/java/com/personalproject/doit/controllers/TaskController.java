@@ -58,7 +58,7 @@ public class TaskController {
 
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<TaskDTO> update(@PathVariable Long id, @RequestBody TaskDTO dto) {
+    public ResponseEntity<TaskDTO> update(@PathVariable Long id, @Valid @RequestBody TaskDTO dto) {
         dto = service.update(id, dto);
         return ResponseEntity.ok(dto);
     }

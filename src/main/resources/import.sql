@@ -29,6 +29,7 @@ INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 9);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 10);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (1, 13);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (2, 1);
+INSERT INTO tb_user_task (user_id, task_id) VALUES (2, 3);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (2, 5);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (2, 6);
 INSERT INTO tb_user_task (user_id, task_id) VALUES (2, 7);
@@ -73,14 +74,12 @@ INSERT INTO tb_role(authority) VALUES ('ROLE_OPERATOR');
 INSERT INTO tb_role(authority) VALUES ('ROLE_ADMIN');
 
 INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 1);
-INSERT INTO tb_user_role(role_id, user_id) VALUES (2, 1);
 INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 2);
-INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 3);
-INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 4);
-INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 5);
-INSERT INTO tb_user_role(role_id, user_id) VALUES (1, 6);
+INSERT INTO tb_user_role(role_id, user_id) VALUES (2, 1);
 
 INSERT INTO tb_task_admins(user_id, task_id) VALUES (1, 1);
+INSERT INTO tb_task_admins(user_id, task_id) VALUES (1, 3);
+INSERT INTO tb_task_admins(user_id, task_id) VALUES (2, 3);
 INSERT INTO tb_task_admins(user_id, task_id) VALUES (1, 13);
 
 

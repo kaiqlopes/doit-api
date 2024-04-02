@@ -85,8 +85,8 @@ public class TaskService {
     public TaskDTO update(Long taskId, TaskDTO dto) {
         try {
             Task entity = repository.getReferenceById(taskId);
-            adminService.isUserAdmin(taskId);
             copyDtoToEntity(dto, entity);
+            adminService.isUserAdmin(taskId);
             entity = repository.save(entity);
 
             return new TaskDTO(entity);
