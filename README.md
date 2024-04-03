@@ -42,9 +42,9 @@ Do It is a To Do List app which has the focus on helping users to be more organi
 - Customized HTTP response codes using ResponseEntity
 - Customized exceptions response messages and codes using exception handlers
 - Customized Constraint Validator to validate user updates
-- N+1 queries problems solved in order to improve performance
-- Tests using Postman
-- Unit and integration tests writen using JUnit 5 and Mockito ensuring application integrity
+- N+1 queries problems solved to improve performance
+- Request tests using Postman
+- Unit and integration tests writen for repository, services and controllers using JUnit 5 and Mockito ensuring application integrity
 
 ## How to Run
 
