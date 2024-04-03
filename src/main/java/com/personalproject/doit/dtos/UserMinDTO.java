@@ -11,6 +11,7 @@ import java.util.Set;
 public class UserMinDTO {
 
     private Long id;
+
     private String name;
     private String email;
     private String phone;

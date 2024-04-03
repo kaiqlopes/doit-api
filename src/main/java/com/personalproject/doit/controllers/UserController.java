@@ -2,6 +2,7 @@ package com.personalproject.doit.controllers;
 
 import com.personalproject.doit.dtos.UserDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
+import com.personalproject.doit.dtos.UserUpdateDTO;
 import com.personalproject.doit.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserMinDTO> update(@PathVariable Long id, @RequestBody UserDTO dto) {
+    public ResponseEntity<UserMinDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
         UserMinDTO minDto = userService.update(id, dto);
         return ResponseEntity.ok(minDto);
     }

@@ -2,6 +2,7 @@ package com.personalproject.doit.services;
 
 import com.personalproject.doit.dtos.UserDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
+import com.personalproject.doit.dtos.UserUpdateDTO;
 import com.personalproject.doit.entities.Role;
 import com.personalproject.doit.entities.User;
 import com.personalproject.doit.exceptions.DatabaseException;
@@ -19,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,14 +31,14 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
 
+    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
     private TaskRepository taskRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, TaskRepository taskRepository) {
-        this.userRepository = userRepository;
-        this.taskRepository = taskRepository;
-    }
+    private PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public UserMinDTO findById(Long id) {
@@ -55,14 +57,20 @@ public class UserService implements UserDetailsService {
     public UserMinDTO insert(UserDTO dto) {
         User user = new User();
 
-        copyDtoToEntity(dto, user);
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPhone(dto.getPhone());
+        user.setBirthDate(dto.getBirthDate());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
         user = userRepository.save(user);
+
         return new UserMinDTO(user);
     }
 
 
     @Transactional
-    public UserMinDTO update(Long id, UserDTO dto) {
+    public UserMinDTO update(Long id, UserUpdateDTO dto) {
         try {
             User user = userRepository.getReferenceById(id);
             copyDtoToEntity(dto, user);
@@ -91,12 +99,10 @@ public class UserService implements UserDetailsService {
         taskRepository.deleteAllById(ids);
     }
 
-    private void copyDtoToEntity(UserDTO dto, User entity) {
+    private void copyDtoToEntity(UserMinDTO dto, User entity) {
         entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
         entity.setPhone(dto.getPhone());
-        entity.setBirthDate(dto.getBirthDate());
-        entity.setPassword(dto.getPassword());
     }
 
     @Override

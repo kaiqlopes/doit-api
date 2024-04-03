@@ -3,6 +3,7 @@ package com.personalproject.doit.factories;
 import com.personalproject.doit.dtos.TaskDTO;
 import com.personalproject.doit.dtos.UserDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
+import com.personalproject.doit.dtos.UserUpdateDTO;
 import com.personalproject.doit.entities.Category;
 import com.personalproject.doit.entities.Task;
 import com.personalproject.doit.entities.User;
@@ -69,8 +70,11 @@ public class Factory {
         return userMinDTO;
     }
 
-    public static Category createCategory() {
+    public static UserUpdateDTO createUserUpdateDTO() {
+        return new UserUpdateDTO(null, "Kaique", "kaique@gmail.com", "123456789");
+    }
 
+    public static Category createCategory() {
         return new Category(1L, "Cuidados pessoais");
     }
 

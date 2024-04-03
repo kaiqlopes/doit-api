@@ -3,12 +3,15 @@ package com.personalproject.doit.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.personalproject.doit.dtos.UserDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
+import com.personalproject.doit.dtos.UserUpdateDTO;
 import com.personalproject.doit.exceptions.DatabaseException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
 import com.personalproject.doit.factories.Factory;
+import com.personalproject.doit.repositories.UserRepository;
 import com.personalproject.doit.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -37,11 +40,15 @@ public class UserControllerTests {
     @MockBean
     private UserService service;
 
+    @MockBean
+    private UserRepository repository;
+
     private Long existingId;
     private Long nonExistingId;
     private Long dependentId;
     private UserDTO userDTO;
     private UserMinDTO userMinDTO;
+    private UserUpdateDTO userUpdateDTO;
     private PageImpl<UserMinDTO> page;
 
     @Autowired
@@ -58,6 +65,7 @@ public class UserControllerTests {
         userDTO = Factory.createUserDTOWithNullId();
         userMinDTO = Factory.createValidUserMinDTO();
         page = new PageImpl<>(List.of(userMinDTO));
+        userUpdateDTO = Factory.createUserUpdateDTO();
 
         when(service.getMe()).thenReturn(userMinDTO);
         when(service.findAll(any())).thenReturn(page);
@@ -150,7 +158,7 @@ public class UserControllerTests {
 
     @Test
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
-        String jsonBody = objectMapper.writeValueAsString(userDTO);
+        String jsonBody = objectMapper.writeValueAsString(userUpdateDTO);
 
         mockMvc.perform(put("/users/{id}", nonExistingId)
                         .content(jsonBody)

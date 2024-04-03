@@ -2,6 +2,7 @@ package com.personalproject.doit.services;
 
 import com.personalproject.doit.dtos.UserDTO;
 import com.personalproject.doit.dtos.UserMinDTO;
+import com.personalproject.doit.dtos.UserUpdateDTO;
 import com.personalproject.doit.entities.User;
 import com.personalproject.doit.exceptions.DatabaseException;
 import com.personalproject.doit.exceptions.ResourceNotFoundException;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -43,12 +45,16 @@ public class UserServiceTests {
     @Mock
     private TaskRepository taskRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     private Long existingId;
     private Long nonExistingId;
     private Long dependentId;
     private User user;
     private UserDTO userDTO;
     private UserMinDTO userMinDTO;
+    private UserUpdateDTO userUpdateDTO;
     private PageImpl<User> page;
     private String existingEmail;
     private String nonExistingEmail;
@@ -128,7 +134,9 @@ public class UserServiceTests {
 
     @Test
     public void updateShouldReturnUserMinDTOWhenIdExists() {
-        UserMinDTO result = service.update(existingId, userDTO);
+        userUpdateDTO = Factory.createUserUpdateDTO();
+
+        UserMinDTO result = service.update(existingId, userUpdateDTO);
 
         Assertions.assertInstanceOf(UserMinDTO.class, result);
         Assertions.assertNotNull(result);
@@ -137,8 +145,10 @@ public class UserServiceTests {
 
     @Test
     public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+        userUpdateDTO = Factory.createUserUpdateDTO();
+
         Assertions.assertThrowsExactly(ResourceNotFoundException.class, () -> {
-           service.update(nonExistingId, userDTO);
+           service.update(nonExistingId, userUpdateDTO);
         });
     }
 
